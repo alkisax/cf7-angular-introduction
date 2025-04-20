@@ -1,3 +1,36 @@
-<div>
-  <h1>Hello angular</h1>
+<div class="container mt-4">
+  <div class="d-flex gap-5 align-items-center">
+    <h1>Coding factory</h1>
+    <h2>introduction to angular</h2>
+  </div>
+  <div class="bg-success p-2 text-light">
+    <h3>Welcome to Angular</h3>
+  </div>
+</div>
+
+<div class="container mt-4">
+  <p>Hello <strong>{{ name }}</strong></p>
+
+  <table class="table table-bordered w-50">
+      <tr>
+        <td class="fw-semibold text-end">First Name</td>
+        <td class="ps-2">{{person.givenName}}</td>
+      </tr>
+      <tr>
+        <td class="fw-semibold text-end">Last Name</td>
+        <td class="ps-2">{{person.surName}}</td>
+      </tr>
+      <tr>
+        <td class="fw-semibold text-end">Age</td>
+        <td class="ps-2">{{person.age}}</td>
+      </tr>
+      <tr>
+        <td class="fw-semibold text-end">Email</td>
+        <td class="ps-2">{{person.email}}</td>
+      </tr>
+  </table>
+</div>
+
+<div class="d-flex gap-5 text-nowrap">
+  <app-person-table></app-person-table>
 </div>
