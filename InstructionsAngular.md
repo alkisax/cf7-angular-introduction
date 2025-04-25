@@ -346,6 +346,19 @@ imports: [PersonTableComponent, EventBindExampleComponent, RouterOutlet]
 ````
 
 ## κάνω τα κουμπιά μου λειτουργικα
+- στο app ts
+
+```typescript
+import { RouterOutlet, RouterLink } from '@angular/router';
+  imports: [PersonTableComponent, EventBindExampleComponent, RouterOutlet, RouterLink],
+```
+- στο Html προσθέτω routerLink
+```html
+<span role="button" routerLink="component-input-example">Component Input Example</span>
+<span role="button" routerLink="for-directive-example">{{"@for"}} Directive Example</span>
+<span role="button" routerLink="event-bind-example">Event Bind Example</span>
+```
+
 
 
 

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { RouterOutlet, RouterLink } from '@angular/router';
 import { PersonTableComponent } from './components/person-table/person-table.component';
 import { Person } from './shared/Interfaces/person';
 import { EventBindExampleComponent } from './components/event-bind-example/event-bind-example.component';
@@ -7,7 +7,7 @@ import { EventBindExampleComponent } from './components/event-bind-example/event
 @Component({
   selector: 'app-root',
   //step2
-  imports: [PersonTableComponent, EventBindExampleComponent, RouterOutlet],
+  imports: [PersonTableComponent, EventBindExampleComponent, RouterOutlet, RouterLink],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
