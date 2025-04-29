@@ -561,6 +561,18 @@ export class SimpleDatatableComponent {
 </table>
 ```
 
+## θέλω αν κάνω διπλό κλικ σε μια γραμμη και μετά να μου κάνει ένα consol log
+- html
+```html
+      <tr class="align-middle" (dblclick)="onPersonClicked(row)">
+```
+- ts
+```ts
+  onPersonClicked(person:EPerson){
+    console.log("Person>>",person)
+  }
+```
+
 
 
 
