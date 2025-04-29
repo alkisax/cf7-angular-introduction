@@ -24,4 +24,8 @@ export class EventBindExampleComponent {
     this.times = 0;
   }
 
+  onUserInput(event: Event){
+    this.userInput = (<HTMLInputElement>event.target).value; //(<HTMLInputElement>event.target) tells TypeScript: "Trust me, this event came from an input element"
+  }
+
 }

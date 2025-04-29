@@ -3,11 +3,12 @@ import { RouterOutlet, RouterLink } from '@angular/router';
 import { PersonTableComponent } from './components/person-table/person-table.component';
 import { Person } from './shared/Interfaces/person';
 import { EventBindExampleComponent } from './components/event-bind-example/event-bind-example.component';
+import { ListGroupMenuComponent } from './components/list-group-menu/list-group-menu.component';
 
 @Component({
   selector: 'app-root',
   //step2
-  imports: [PersonTableComponent, EventBindExampleComponent, RouterOutlet, RouterLink],
+  imports: [PersonTableComponent, EventBindExampleComponent, RouterOutlet, RouterLink, ListGroupMenuComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

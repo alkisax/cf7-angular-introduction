@@ -357,9 +357,139 @@ import { RouterOutlet, RouterLink } from '@angular/router';
 <span role="button" routerLink="component-input-example">Component Input Example</span>
 <span role="button" routerLink="for-directive-example">{{"@for"}} Directive Example</span>
 <span role="button" routerLink="event-bind-example">Event Bind Example</span>
+## 29/4/25
 ```
 
+για να έχω μια φορμα που δείχνει καθός πληκρολογώ
+- στο event bind html
+```html
+  <input type="text" class="form-control" (input)="onUserInput($event)">
+    @if (!userInput) {
+    <span class="text-danger">No user input</span>
+  } @else {
+    <span class="text-bg-info p-2">{{userInput}}</span>
+  }
+```
+- κσι στο ts
+```ts
+  onUserInput(event: Event){
+    this.userInput = (<HTMLInputElement>event.target).value; //(<HTMLInputElement>event.target) tells TypeScript: "Trust me, this event came from an input element"
+  }
+```
+## φτιαχνουμε καλυτερα το μενού
+## νεο κομπονεντ
+```bash
+ng generate component components/list-group-menu
+```
 
+```ts
+export class ListGroupMenuComponent {
+  menu = [
+    { text: 'Component Input Example', linkName:'component-input-example'}, //αυτα είναι ονοματα του λινκ που θα χρησιμοποιηθούν. Δες στο Html παρακάτω
+    { text: '@for Directive Example', linkName:'for-directive-example' }, 
+    { text: 'Event-Bind-Example', linkName:'event-bind-example'},
+  ]
+}
+```
+- html
+προσοχή στο {{entry.text}} 
+το active ανάλογα με το λινκ που έχω πατήσει αν είναι active το εμφανίζει με διαφορετικό χρώμα
+
+```html
+<div class="list-group">
+  @for (entry of menu; track entry){
+    <a 
+      class='list-group-item list-group-item-action text-truncate'
+      [routerLink]="entry.linkName"
+      [routerLinkActive] = "['active']"
+    >{{entry.text}}</a>
+  }
+</div>
+```
+το html του component μου δεν εμφανίζετε ακόμα στην κεντρική σελίδα γιατί δεν το έχω περάσει
+
+- στο app ts
+```ts
+import { ListGroupMenuComponent } from './components/list-group-menu/list-group-menu.component';
+
+  imports: [PersonTableComponent, EventBindExampleComponent, RouterOutlet, RouterLink, ListGroupMenuComponent],
+```
+- html
+τo 25% το menu το 75% η σελίδα
+```html
+      <app-list-group-menu class="text-nowrap w-25"></app-list-group-menu>
+      <span class="flex-grow-1 p-2 text-nowrap w-75">
+```
+
+## θα κάνουμε ταξινόμιση στο @for directive example
+
+### δυο νέα components
+```bash
+    ng generate component components/simple-datatable-example
+
+    ng generate component components/simple-datatable
+```
+- app.routes.ts
+```ts
+import { SimpleDatatableExampleComponent } from './components/simple-datatable-example/simple-datatable-example.component';
+
+  { path: 'simple-datatable-example', component: SimpleDatatableExampleComponent},
+```
+- list group menu
+```ts
+    { text: 'Simple DataTable Example', linkName:'simple-datatable-example'}
+```
+
+- φτιάχνω ένα νεο ιντερφεις
+```bash
+ng generate interface shared/interfaces/eperson
+```
+```ts
+export interface Eperson {
+  givenName: string
+  surNmae: string
+  age: string
+  email: string
+  education: string
+}
+
+// kai diafora data typy
+export const ManyPerson: EPerson[] = [
+  {
+    givenName: 'Sarah',
+    surName: 'Howard',
+    age: '41',
+    email: 's.m.howard@yahoo.com',
+    education: 'Some college, no degree',
+  },
+  {
+    givenName: 'Alexander',
+    surName: 'Turner',
+    age: '43',
+    email: 'alexanderfturner@gmail.com',
+    education: 'Master’s degree',
+  },
+  // [...]
+];
+
+```
+
+- simple datatable examble ts
+```ts
+import { Component } from '@angular/core';
+import { SimpleDatatableComponent } from '../simple-datatable/simple-datatable.component';
+import { ManyPerson } from 'src/app/shared/Interfaces/person';
+
+@Component({
+  selector: 'app-simple-datatable-example',
+  imports: [SimpleDatatableComponent],
+  templateUrl: './simple-datatable-example.component.html',
+  styleUrl: './simple-datatable-example.component.css'
+})
+export class SimpleDatatableExampleComponent {
+  manyPerson = ManyPerson;
+}
+```
 
 
 
