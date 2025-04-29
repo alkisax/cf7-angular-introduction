@@ -429,12 +429,14 @@ import { ListGroupMenuComponent } from './components/list-group-menu/list-group-
 
     ng generate component components/simple-datatable
 ```
+
 - app.routes.ts
 ```ts
 import { SimpleDatatableExampleComponent } from './components/simple-datatable-example/simple-datatable-example.component';
 
   { path: 'simple-datatable-example', component: SimpleDatatableExampleComponent},
 ```
+
 - list group menu
 ```ts
     { text: 'Simple DataTable Example', linkName:'simple-datatable-example'}
@@ -489,6 +491,74 @@ import { ManyPerson } from 'src/app/shared/Interfaces/person';
 export class SimpleDatatableExampleComponent {
   manyPerson = ManyPerson;
 }
+```
+
+- simple datatable example html του περνάμε τα data
+το κοκκινο είναι φυσιολογικο γιατί η data δεν έχει δημιουργηθεί ακόμα
+```html
+<h4>Simple DataTable Example</h4>
+<app-simple-datatable [data] = 'manyPerson'></app-simple-datatable>
+```
+
+- simple datatable component ts
+  @Input() data: EPerson[] | undefined;
+```ts
+
+import { Component, Input } from '@angular/core';
+import { EPerson } from 'src/app/shared/Interfaces/eperson';
+import { sortBy } from 'lodash-es';
+
+@Component({
+  selector: 'app-simple-datatable',
+  imports: [],
+  templateUrl: './simple-datatable.component.html',
+  styleUrl: './simple-datatable.component.css'
+})
+export class SimpleDatatableComponent {
+  @Input() data: EPerson[] | undefined;
+
+  sortOrder = {
+    givenName: 'none',
+    surName: 'none',
+    age:'none',
+    email:'none',
+    education:'none'
+  }
+
+  sortData(sortKey: keyof EPerson) {
+    console.log(sortKey);
+  }
+
+  onPersonClicked(person:EPerson){
+    console.log("Person>>",person)
+  }
+}
+```
+
+- και στο html του simple dattable
+```html
+<table class="table table-bordered table-striped text-wrap">
+  <thead>
+    <tr class="align-middle text-center small">
+      <th role="button" (click)="sortData('givenName')">First Name</th>
+      <th role="button" (click)="sortData('surName')">Last Name</th>
+      <th role="button" (click)="sortData('age')">Age</th>
+      <th role="button" (click)="sortData('email')">Email</th>
+      <th role="button" (click)="sortData('education')">Education</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (row of data; track row) {
+      <tr class="align-middle" (dblclick)="onPersonClicked(row)">
+        <td>{{row.givenName}}</td>
+        <td>{{row.surName}}</td>
+        <td>{{row.age}}</td>
+        <td>{{row.email}}</td>
+        <td>{{row.education}}</td>
+      </tr>
+    }
+  </tbody>
+</table>
 ```
 
 

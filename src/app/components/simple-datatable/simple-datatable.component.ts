@@ -1,7 +1,7 @@
 
 import { Component, Input } from '@angular/core';
-import { EPerson } from 'src/app/shared/interfaces/eperson';
-import { sortBy } from 'lodash-es';
+import { EPerson } from 'src/app/shared/Interfaces/eperson';
+// import { sortBy } from 'lodash-es';
 
 @Component({
   selector: 'app-simple-datatable',
