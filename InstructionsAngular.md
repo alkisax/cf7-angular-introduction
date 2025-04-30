@@ -517,18 +517,6 @@ import { sortBy } from 'lodash-es';
 export class SimpleDatatableComponent {
   @Input() data: EPerson[] | undefined;
 
-  sortOrder = {
-    givenName: 'none',
-    surName: 'none',
-    age:'none',
-    email:'none',
-    education:'none'
-  }
-
-  sortData(sortKey: keyof EPerson) {
-    console.log(sortKey);
-  }
-
   onPersonClicked(person:EPerson){
     console.log("Person>>",person)
   }
@@ -572,6 +560,66 @@ export class SimpleDatatableComponent {
     console.log("Person>>",person)
   }
 ```
+
+## ascending η descending
+- βιβλιοθήκη για ταξινόμηση
+```bash
+npm i lodash-es
+```
+το πρόβλημα είναι οτι είναι βιβλιοθήκη της js και οχι της ts και θέλει ρυθμήσεις
+```bash
+npm i --save-dev @types/lodash-es
+```
+
+
+- στο simple datable components ts
+```ts
+import { sortBy } from 'lodash-es';
+
+  sortOrder = {
+    givenName: 'none',
+    surName: 'none',
+    age:'none',
+    email:'none',
+    education:'none'
+  }
+```
+
+- στο html 
+```html
+  <thead>
+    <tr class="align-middle text-center small">
+      <th role="button" (click)="sortData('givenName')">First Name</th>
+      <th role="button" (click)="sortData('surName')">Last Name</th>
+      <th role="button" (click)="sortData('age')">Age</th>
+      <th role="button" (click)="sortData('email')">Email</th>
+      <th role="button" (click)="sortData('education')">Education</th>
+    </tr>
+  </thead>
+```
+
+παω να φτιάξω την sortData στo ts
+```ts
+  sortData(sortKey: keyof EPerson): void {
+    console.log(sortKey);
+    if (this.sortOrder[sortKey]==='asc'){
+      this.sortOrder[sortKey] = 'desc'
+      this.data = sortBy(this.data, sortKey).reverse();
+    } else {
+      this.sortOrder[sortKey] = 'asc';
+      this.data = sortBy(this.data, sortKey);
+    }
+    
+    for (let key in this.sortOrder){
+      if (key!==sortKey) {
+        this.sortOrder[key as keyof EPerson] = 'none'
+      }
+    }
+
+    console.log(this.sortOrder);
+  }
+```
+
 
 
 
