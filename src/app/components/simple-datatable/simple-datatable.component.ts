@@ -1,5 +1,5 @@
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { EPerson } from 'src/app/shared/Interfaces/eperson';
 import { sortBy } from 'lodash-es';
 
@@ -11,6 +11,7 @@ import { sortBy } from 'lodash-es';
 })
 export class SimpleDatatableComponent {
   @Input() data: EPerson[] | undefined;
+  @Output() personClicked = new EventEmitter<EPerson>()
 
   sortOrder = {
     givenName: 'none',
@@ -39,7 +40,14 @@ export class SimpleDatatableComponent {
     console.log(this.sortOrder);
   }
 
+  sortSign(sortKey: keyof EPerson): string {
+    if (this.sortOrder[sortKey]==='asc') return '\u2191'
+    else if (this.sortOrder[sortKey]==='desc') return '\u2193'
+    else return '';
+  }
+
   onPersonClicked(person:EPerson){
     console.log("Person>>",person)
+    this.personClicked.emit(person);
   }
 }

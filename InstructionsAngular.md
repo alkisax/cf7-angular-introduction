@@ -620,8 +620,122 @@ import { sortBy } from 'lodash-es';
   }
 ```
 
+το ag grid είναι μια καλή βιβλιοθήκη για να έχουμε ετοιμο grid δεδομένων
 
+- παω να προσθέσω σύμβολο που να λέει αν υπάρχει ταξινόμηση και τι
+- html
+```html
+  <thead>
+    <tr class="align-middle text-center small">
+      <th role="button" (click)="sortData('givenName')">
+        First Name {{sortSign('givenName')}}
+      </th>
+      <th role="button" (click)="sortData('surName')">
+        Last Name {{sortSign('surName')}}
+      </th>
+      <th role="button" (click)="sortData('age')">
+        Age {{sortSign('age')}}
+      </th>
+      <th role="button" (click)="sortData('email')">
+        Email {{sortSign('email')}}
+      </th>
+      <th role="button" (click)="sortData('education')">
+        Education {{sortSign('education')}}
+      </th>
+    </tr>
+  </thead>
+```
 
+- παω στο ts να φτιάξω την sortSign
+```ts
+  sortSign(sortKey: keyof EPerson): string {
+    if (this.sortOrder[sortKey]==='asc') return '\u2191'
+    else if (this.sortOrder[sortKey]==='desc') return '\u2193'
+    else return '';
+  }
+```
+
+# μέχρι τώρα βλέπαμε πως ο πατέρας έστελνε ντατα στο παιδί. τώρα θα δούμε το αντίστροφο.
+- ο πατέρας
+```html
+<h4>Simple DataTable Example</h4>
+<app-simple-datatable [data] = 'manyPerson'></app-simple-datatable>
+```
+
+- Νεο compontent
+```bash
+ng generate component components/component-output-example
+```
+
+- ts
+```ts
+import { EPerson, ManyPerson } from 'src/app/shared/interfaces/eperson';
+import { SimpleDatatableComponent } from 'src/app/components/simple-datatable/simple-datatable.component';
+
+  imports: [SimpleDatatableComponent],
+
+    manyPerson = ManyPerson;
+```
+
+```html
+<h4>Component Output Example</h4>
+<app-simple-datatable [data]="manyPerson" ></app-simple-datatable>
+```
+
+- επειδή δεν τα βλέπω αυτα πρέπει να μπουν στο κεντρικο app
+- στο path
+```ts
+  { path: 'compnent-output-example', component: ComponentOutputExampleComponent}
+```
+- στο list-group-menu.ts
+```ts
+    { text: 'component Output Example', linkName: 'component-output-example'},
+```
+## θέλω με διπλό κλικ να επιστρέψει στο component-output-exampl (στον πατέρα) και αυτό να μου τα στείλει με alert
+
+- simple datatable ts
+στο παιδί δηλώνω μια μεταβλητή τύπου @output, αυτό είναι ένα event και λέω τι τύπου δεδομένα θα στείλω και αρχική τιμή τίποτα ()
+```ts
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+
+  @Output() personClicked = new EventEmitter<EPerson>()
+```
+και αλλαζω την onpersonclicked
+```ts
+  onPersonClicked(person:EPerson){
+    console.log("Person>>",person)
+    this.personClicked.emit(person);
+  }
+```
+
+τωρα να δούμε πως ο πατέρας θα διαβάσει αυτό που του στέλνει το παιδι.
+- component outpout html
+να στείλει τα ντατα σε μια διαδικασια που λέγετε showpersonclicked
+### το input με [] το output σε ()
+```html
+<h4>Component Output Example</h4>
+<app-simple-datatable [data]="manyPerson" (personClicked)="showPersonClicked($event)"></app-simple-datatable>
+```
+- η showPersonClicked στο οutput example ts
+```ts
+  showPersonClicked(person: EPerson) {
+    console.log("Component Output", person);
+    alert(this.personTemplate(person));
+  }
+
+  personTemplate(person: EPerson) { 
+    return `
+    Person Details
+
+    First Name: ${person.givenName}
+    Last Name: ${person.surName}
+    Age: ${person.age}
+    Email: ${person.email}
+    Education: ${person.education}
+    `
+  }
+```
+1:14:33
 
 
 
