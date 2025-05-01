@@ -16,16 +16,16 @@ import {
 })
 export class ComponentOutputExampleComponent {
   manyPerson = ManyPerson;
+
+  // constructor(public dialog: Dialog)
   dialog = inject(Dialog);
   
-  // constructor(public dialog: Dialog)
-
   showPersonClicked(person: EPerson) {
     console.log("Component Output", person);
-    alert(this.personTemplate(person));
-    // this.dialog.open(PersonDialogComponent, {
-    //   data:person
-    // })
+    // alert(this.personTemplate(person));
+    this.dialog.open(PersonDialogComponent, {
+      data:person
+    })
   }
 
   personTemplate(person: EPerson) { 

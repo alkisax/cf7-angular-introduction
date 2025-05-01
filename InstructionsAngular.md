@@ -685,7 +685,7 @@ import { SimpleDatatableComponent } from 'src/app/components/simple-datatable/si
 - επειδή δεν τα βλέπω αυτα πρέπει να μπουν στο κεντρικο app
 - στο path
 ```ts
-  { path: 'compnent-output-example', component: ComponentOutputExampleComponent}
+{ path: 'component-output-example', component: ComponentOutputExampleComponent },
 ```
 - στο list-group-menu.ts
 ```ts
@@ -735,7 +735,171 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
     `
   }
 ```
-1:14:33
+### το alert pop up δεν είναι καλός τρόπος. Είτε modal απο bootstrap, είτε meterial design
+
+# Material design
+το components έχει και το styling ενω το cdk οχι
+
+το ng add κανει install και τις ρυθμήσεις στα σετινγκσ
+```bash
+ng add @angular/material
+```
+- παίρνω κώδικα απο https://material.angular.dev/cdk/dialog/overview
+
+- output example ts
+```ts
+import {
+  Dialog,
+  DialogRef,
+  DIALOG_DATA,
+  DialogModule
+} from '@angular/cdk/dialog';
+
+  dialog = inject(Dialog); // na do parapano
+
+  showPersonClicked(person: EPerson) {
+    console.log("Component Output", person);
+    // alert(this.personTemplate(person));
+    this.dialog.open(PersonDialogComponent, {
+      data:person
+    }) //άνοιξε ένα dialog και μέσα εμφάνησε ένα νεο υποcomponent με αυτά τα data
+  }
+
+```
+- το PersonDialogComponent δεν υπαρχει ακόμακαι πρέπει να το δημιουργήσω. Εξω απο την κλάση στο ts:
+
+```ts
+@Component({
+  imports:[],
+  // σε αλλα components εςγραφ κατι σαν   templateUrl: './component-output-example.component.html',
+  template: `
+  <table class="table table-bordered w-50">
+    <caption>Person Details</caption>
+    <tr>
+      <td class="fw-semibold text-end">First Name</td>
+      <td class="ps-2">{{person.givenName}}</td>
+    </tr>
+    <tr>
+      <td class="fw-semibold text-end">Last Name</td>
+      <td class="ps-2">{{person.surName}}</td>
+    </tr>
+    <tr>
+      <td class="fw-semibold text-end">Age</td>
+      <td class="ps-2">{{person.age}}</td>
+    </tr>
+    <tr>
+      <td class="fw-semibold text-end">Email</td>
+      <td class="ps-2">{{person.email}}</td>
+    </tr>
+    <tr>
+      <td class="fw-semibold text-end">Education</td>
+      <td class="ps-2">{{person.education}}</td>
+    </tr>
+  </table>
+  <button class="btn btn-primary btn-sm" (click)="dialogRef.close()">Close</button>
+  `,
+  // αλλού   styleUrl: './component-output-example.component.css'
+  styles: [
+    `
+      :host {
+        display:block;
+        background:#fff;
+        border-radius: 8px;
+        padding: 16px;
+        max-width: 500px
+      }
+    `
+  ]
+})
+// αυτό το dialogRef προστέθηκε για να μπορώ να έχω ένα κουμπί close
+export class PersonDialogComponent {
+  dialogRef = inject(DialogRef); 
+  constructor(
+    @Inject(DIALOG_DATA) public person: EPerson
+  ){}
+}
+```
+
+# φορμες
+- template driven forms
+- reactive forms (αυτό είναι το συνηθισμενο)
+
+### φτιαχνω δυο components
+```bash
+ng generate component components/template-driven-form-example
+
+ng generate component components/eperson-template-driven-form
+```
+- app routes
+```ts
+import { TemplateDrivenFormExampleComponent } from './components/template-driven-form-example/template-driven-form-example.component';
+
+  { path: 'template-driven-form-example', component: TemplateDrivenFormExampleComponent},
+```
+
+- list group menu ts
+```ts
+export class ListGroupMenuComponent {
+  menu = [
+    { text: 'Component Input Example', linkName:'component-input-example'}, //αυτα είναι ονοματα του λινκ που θα χρησιμοποιηθούν.
+    { text: 'component Output Example', linkName: 'component-output-example'},
+    { text: '@for Directive Example', linkName:'for-directive-example' },
+    { text: 'Event-Bind-Example', linkName:'event-bind-example'},
+    { text: 'Simple DataTable Example', linkName:'simple-datatable-example'},
+    { text: 'Template Driven Form Example', linkName: 'template-driven-form-example'}
+  ]
+}
+```
+
+## θέλω μια φορμα και οταν πατάω υποβολή να μου τα εμφανίζει στα δεξια
+
+- template driven form html
+```html
+<h4>Template Driven Form Example</h4>
+<div class="d-flex gap-4">
+  <app-eperson-template-driven-form></app-eperson-template-driven-form>
+  <div class="d-flex flex-column gap-4">
+    <app-person-table></app-person-table>
+    <app-simple-datatable [data]="persons"></app-simple-datatable>
+  </div>
+</div>
+```
+
+- template driven form ts
+κάνω τα ιμπορτ 
+```ts
+import { EpersonTemplateDrivenFormComponent } from '../eperson-template-driven-form/eperson-template-driven-form.component';
+import { PersonTableComponent } from '../person-table/person-table.component';
+import { SimpleDatatableComponent } from '../simple-datatable/simple-datatable.component';
+```
+
+- eperson template ts
+- - ολα αυτά ειναι βιβλιοθήκες για τις φορμες
+```ts
+import { FormsModule, NgForm} from '@angular/forms'
+import { MatSelectModule } from '@angular/material/select';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatButtonModule } from '@angular/material/button';
+import { EPerson } from 'src/app/shared/Interfaces/eperson';
+
+@Component({
+  selector: 'app-eperson-template-driven-form',
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatSelectModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatButtonModule
+  ],
+  templateUrl: './eperson-template-driven-form.component.html',
+  styleUrl: './eperson-template-driven-form.component.css'
+})
+```
+
+
+
 
 
 

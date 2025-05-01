@@ -13,6 +13,7 @@ export class ListGroupMenuComponent {
     { text: 'component Output Example', linkName: 'component-output-example'},
     { text: '@for Directive Example', linkName:'for-directive-example' },
     { text: 'Event-Bind-Example', linkName:'event-bind-example'},
-    { text: 'Simple DataTable Example', linkName:'simple-datatable-example'}
+    { text: 'Simple DataTable Example', linkName:'simple-datatable-example'},
+    { text: 'Template Driven Form Example', linkName: 'template-driven-form-example'}
   ]
 }
