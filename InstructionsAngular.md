@@ -550,11 +550,11 @@ export class SimpleDatatableComponent {
 ```
 
 ## θέλω αν κάνω διπλό κλικ σε μια γραμμη και μετά να μου κάνει ένα consol log
-- html
+#### html
 ```html
       <tr class="align-middle" (dblclick)="onPersonClicked(row)">
 ```
-- ts
+#### ts
 ```ts
   onPersonClicked(person:EPerson){
     console.log("Person>>",person)
@@ -572,7 +572,7 @@ npm i --save-dev @types/lodash-es
 ```
 
 
-- στο simple datable components ts
+#### στο simple datable components ts
 ```ts
 import { sortBy } from 'lodash-es';
 
@@ -585,7 +585,7 @@ import { sortBy } from 'lodash-es';
   }
 ```
 
-- στο html 
+#### στο html 
 ```html
   <thead>
     <tr class="align-middle text-center small">
@@ -623,7 +623,7 @@ import { sortBy } from 'lodash-es';
 το ag grid είναι μια καλή βιβλιοθήκη για να έχουμε ετοιμο grid δεδομένων
 
 - παω να προσθέσω σύμβολο που να λέει αν υπάρχει ταξινόμηση και τι
-- html
+#### html
 ```html
   <thead>
     <tr class="align-middle text-center small">
@@ -646,7 +646,7 @@ import { sortBy } from 'lodash-es';
   </thead>
 ```
 
-- παω στο ts να φτιάξω την sortSign
+#### παω στο ts να φτιάξω την sortSign
 ```ts
   sortSign(sortKey: keyof EPerson): string {
     if (this.sortOrder[sortKey]==='asc') return '\u2191'
@@ -667,7 +667,7 @@ import { sortBy } from 'lodash-es';
 ng generate component components/component-output-example
 ```
 
-- ts
+#### ts
 ```ts
 import { EPerson, ManyPerson } from 'src/app/shared/interfaces/eperson';
 import { SimpleDatatableComponent } from 'src/app/components/simple-datatable/simple-datatable.component';
@@ -683,17 +683,17 @@ import { SimpleDatatableComponent } from 'src/app/components/simple-datatable/si
 ```
 
 - επειδή δεν τα βλέπω αυτα πρέπει να μπουν στο κεντρικο app
-- στο path
+#### στο path
 ```ts
 { path: 'component-output-example', component: ComponentOutputExampleComponent },
 ```
-- στο list-group-menu.ts
+#### στο list-group-menu.ts
 ```ts
     { text: 'component Output Example', linkName: 'component-output-example'},
 ```
 ## θέλω με διπλό κλικ να επιστρέψει στο component-output-exampl (στον πατέρα) και αυτό να μου τα στείλει με alert
 
-- simple datatable ts
+#### simple datatable ts
 στο παιδί δηλώνω μια μεταβλητή τύπου @output, αυτό είναι ένα event και λέω τι τύπου δεδομένα θα στείλω και αρχική τιμή τίποτα ()
 ```ts
 import { Component, Input, Output, EventEmitter } from '@angular/core';
@@ -709,14 +709,14 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 ```
 
 τωρα να δούμε πως ο πατέρας θα διαβάσει αυτό που του στέλνει το παιδι.
-- component outpout html
+#### component outpout html
 να στείλει τα ντατα σε μια διαδικασια που λέγετε showpersonclicked
 ### το input με [] το output σε ()
 ```html
 <h4>Component Output Example</h4>
 <app-simple-datatable [data]="manyPerson" (personClicked)="showPersonClicked($event)"></app-simple-datatable>
 ```
-- η showPersonClicked στο οutput example ts
+#### η showPersonClicked στο οutput example ts
 ```ts
   showPersonClicked(person: EPerson) {
     console.log("Component Output", person);
@@ -746,7 +746,7 @@ ng add @angular/material
 ```
 - παίρνω κώδικα απο https://material.angular.dev/cdk/dialog/overview
 
-- output example ts
+#### output example ts
 ```ts
 import {
   Dialog,
@@ -830,14 +830,14 @@ ng generate component components/template-driven-form-example
 
 ng generate component components/eperson-template-driven-form
 ```
-- app routes
+#### app routes
 ```ts
 import { TemplateDrivenFormExampleComponent } from './components/template-driven-form-example/template-driven-form-example.component';
 
   { path: 'template-driven-form-example', component: TemplateDrivenFormExampleComponent},
 ```
 
-- list group menu ts
+#### list group menu ts
 ```ts
 export class ListGroupMenuComponent {
   menu = [
@@ -853,7 +853,7 @@ export class ListGroupMenuComponent {
 
 ## θέλω μια φορμα και οταν πατάω υποβολή να μου τα εμφανίζει στα δεξια
 
-- template driven form html
+#### template driven form html
 ```html
 <h4>Template Driven Form Example</h4>
 <div class="d-flex gap-4">
@@ -865,7 +865,7 @@ export class ListGroupMenuComponent {
 </div>
 ```
 
-- template driven form ts
+#### template driven form ts
 κάνω τα ιμπορτ 
 ```ts
 import { EpersonTemplateDrivenFormComponent } from '../eperson-template-driven-form/eperson-template-driven-form.component';
@@ -873,7 +873,7 @@ import { PersonTableComponent } from '../person-table/person-table.component';
 import { SimpleDatatableComponent } from '../simple-datatable/simple-datatable.component';
 ```
 
-- eperson template ts
+#### eperson template ts
 - - ολα αυτά ειναι βιβλιοθήκες για τις φορμες
 ```ts
 import { FormsModule, NgForm} from '@angular/forms'
@@ -897,6 +897,180 @@ import { EPerson } from 'src/app/shared/Interfaces/eperson';
   styleUrl: './eperson-template-driven-form.component.css'
 })
 ```
+#### eperson template driven form html
+mat-form-field mat-label mat-select/mat-option mat-error
+```html
+  <form #eForm="ngForm" class="d-flex flex-column">
+    <!-- normal form field -->
+    <mat-form-field>
+      <mat-label>First Name</mat-label>
+      <input matInput ngModel required type="text" name="givenName" #givenName="ngModel"/>
+      <!-- το error μπορεί να γίνει λόγο required -->
+      <mat-error>First Name is required</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Last Name</mat-label>
+      <input matInput ngModel required type="text" name="surName" #surName="ngModel"/>
+      <mat-error>Last Name is required</mat-error>
+    <!-- number field με κουμπακια για αθξηση μειώση -->
+    <mat-form-field>
+      <mat-label>Age</mat-label>
+      <input matInput ngModel required type="number" min="18" max="100" name="age"#age="ngModel" >
+      <mat-error>Age is required</mat-error>
+    </mat-form-field>
+    <!-- email field -->
+    <!-- αυτό μπορεί να γραφτεί και πολύ πιο απλα με type email -->
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Email</mat-label>
+      <input 
+        matInput 
+        ngModel 
+        required 
+        type="text" 
+        name="email"
+        pattern="[a-zA-Z0-9\.\-]+@[a-zA-Z0-9\.\-]+\.[a-zA-Z]{2,}" 
+        #email="ngModel">
+      @if (email.errors && email.errors['required']){  
+        <mat-error>Email is required</mat-error>
+      }
+      @if (email.errors && email.errors['pattern']){
+        <mat-error>Invalid email</mat-error>
+      }
+    </mat-form-field>
+    <!-- drop down menu -->
+    <mat-form-field>
+      <mat-label>Education</mat-label>
+      <mat-select ngModel required name="education" #education="ngModel"> 
+        <mat-option value="Some college, no degree">Some college, no degree</mat-option>
+        <mat-option value="Master's degree">Master's degree</mat-option>
+        <mat-option value="Bachelor's degree">Bachelor's degree</mat-option>
+        <mat-option value="No formal education">No formal education</mat-option>
+      </mat-select>
+      <mat-error>Education is required field</mat-error>
+    </mat-form-field>
+<!-- [...] -->
+  </form>
+  <!-- το submit btn -->
+  <button 
+    mat-flat-button
+    [disabled]="eForm.invalid"
+    (click)="onSubmit(eForm.value)" 
+    color="primary">
+      Submit
+  </button>
+  <button (click)="onSetValue()">Set Value</button>
+```
+### πως να γινονται αντιλιπτα τα στοιχεία που περάστικαν στην φόρμα
+
+- βάζω ονόματα στις φόρμες:  
+#eForm="ngForm"  
+#givenName="ngModel"  
+#surName="ngModel"  
+#age="ngModel"  
+#email="ngModel"  
+#education="ngModel"  
+
+και μέσα στο πεδίο μου βάζω ```ngModel``` και καταλαβαίνει οτι είναι μέρος της φόρμσς 
+
+- στο btn  για  να μην είναι ενεργό το κουμπί ωσπου να έιναι συμπληρωμένη η φορμα
+```[disabled]="eForm.invalid"```
+
+- η συάρτηση βρίσκετε στο component  
+```(click)="onSubmit(eForm.value)" ```
+
+#### eperson template drive form ts  
+```ts
+import { EPerson } from 'src/app/shared/Interfaces/eperson';
+
+// παίρνει κάποια value που είναι τύπου EPerson (αν δεν ξέρω βάζω any, αλλα έτσι λειτουργώ σαν js και οχι ts)
+  onSubmit(value: EPerson){
+    console.log(value);
+  }
+```
+
+- έτσι είχα τιμές στην φορμα και τα έστειλα στο κομπονεντ. τώρα θα δούμε πως θα στείλω απο το κομπονεντ στην φορμα
+
+```ts
+// viewchild
+import { Component, ViewChild } from '@angular/core';
+
+//class
+// θα διαβάζω το eForm με το λεκτικό form και αυτό θα είναι τυπου NgForm
+  @ViewChild('eForm', { static:false }) form:NgForm | undefined;
+
+// έχω στην φορμα ένα κουμπι που μου συπληρώνει με ένα στανταρ ολα τα πεδία. εδώ το φτιάχνουμε
+//this.form
+// τωρα αν κανω κλικ δουλευει
+  onSetValue(){
+    this.form?.setValue({
+      givenName:"John",
+      surName:"Doe",
+      age: 30,
+      email:"john@aueb.gr",
+      education:"Bachelor's degree"
+    });
+    // αν θέλω να βάλω τιμή μόνο σε ένα πεδίο
+    this.form?.form.controls['givenName'].setValue("aaaaa")
+  }
+```
+```ts
+  onSubmit(value: EPerson){
+    console.log(value);
+    console.log(this.form);
+    console.log(this.form?.form.get('givenName')?.value)
+    console.log(this.form?.form.controls['surName'].value);
+    //
+  }
+```
+
+- οταν κάνω σαμπμιτ θελω να τα στείλω στο πιο πανω πατέρα και να τα περάσει στην html του στο simple data table (το οποίο το έχω ως υποκομπονεντ)
+
+
+```ts
+import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
+
+// emiter Που στέλνει EPerson και το αρχικό του είναι κενό
+  @Output() person = new EventEmitter<EPerson>()
+// ...
+//     this.person.emit(value);
+  onSubmit(value: EPerson){
+    console.log(value);
+    console.log(this.form);
+    console.log(this.form?.form.get('givenName')?.value)
+    console.log(this.form?.form.controls['surName'].value);
+    this.person.emit(value);
+  }
+```
+
+#### πατέρας -> template drivern form example.ts
+
+```ts
+export class TemplateDrivenFormExampleComponent {
+  persons: EPerson[] = [];
+  currentPerson: EPerson = {
+    givenName: '',
+    surName: '',
+    age: '',
+    email:'',
+    education:''
+  };
+
+    // παρακατω
+    onPerson(data: EPerson){
+    this.persons.push(data)
+    this.currentPerson = data;
+    console.log("Father", this.persons);
+  }
+}
+```
+
+#### template driven form example.html
+```html
+<!-- oταν το person Που ειναι αουτπουτ γινει emit θα πας στον πατέρα και θα τρεξεις την onperson περνόντας το event, ουσιαστικα το submit -->
+  <app-eperson-template-driven-form (person)="onPerson($event)"></app-eperson-template-driven-form>
+```
+2:18:25
 
 
 
