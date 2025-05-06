@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Person } from 'src/app/shared/Interfaces/person'
+import { EPerson } from 'src/app/shared/Interfaces/eperson'
 
 @Component({
   selector: 'app-person-table',
@@ -9,7 +10,7 @@ import { Person } from 'src/app/shared/Interfaces/person'
 })
 export class PersonTableComponent {
   // step 3
-  @Input() personInput: Person | undefined
+  @Input() personInput: Person | EPerson |undefined
 
   name = "Thanasis"
 
@@ -18,5 +19,22 @@ export class PersonTableComponent {
     surName: "malakas",
     age: 20,
     email:'thanasis@aueb.gr'
+  }
+  addressOReducation: string = '';
+
+  isPerson():boolean {
+    if (this.personInput && 'address' in this.personInput) {
+      this.addressOReducation = this.personInput.address
+      return 'address' in this.personInput;
+    }
+    return false;
+  }
+
+  isEPerson():boolean {
+    if (this.personInput && 'education'in this.personInput){ 
+      this.addressOReducation = this.personInput.education
+      return 'education'in this.personInput;
+    }  
+    return false
   }
 }

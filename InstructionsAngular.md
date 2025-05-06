@@ -1068,11 +1068,98 @@ export class TemplateDrivenFormExampleComponent {
 ```
 
 #### template driven form example.html
+input [] output ()
 ```html
 <!-- oταν το person Που ειναι αουτπουτ γινει emit θα πας στον πατέρα και θα τρεξεις την onperson περνόντας το event, ουσιαστικα το submit -->
   <app-eperson-template-driven-form (person)="onPerson($event)"></app-eperson-template-driven-form>
 ```
 2:18:25
+```html
+  <app-eperson-template-driven-form (person)="onPerson($event)"></app-eperson-template-driven-form>
+  <div class="d-flex flex-column gap-4">
+    <!-- <app-person-table [personInput]="currentPerson"></app-person-table> -->
+    <app-person-table></app-person-table>
+    <app-simple-datatable [data]="persons"></app-simple-datatable>
+  </div>
+```
+
+- κάτι αντίστοιχω θα πρέπει να κάνουμε και στο pesron table για να στείλει τα data
+- έχει μια μεταβλητή που παίρνει Person ή undefined
+το ένα είναι Person και το αλλο Eperson οπότε το αλλάζω
+```
+  @Input() personInput: Person | EPerson |undefined
+```
+
+- στο person table component html  <td class="ps-2">{{personInput?.address}}</td>
+θα πρέπει να κάνω αλλαγήσ το person γιατί δεν έχει address
+#### person table component html
+```html
+@if (!personInput){
+  <div class="alert alert-danger text-center">No Person Details</div>
+} @else {
+  ολα τα υπόλοιπα
+
+        @if(isPerson()){
+        <tr>
+          <td class="fw-semibold text-end">Address</td>
+          <td class="ps-2">{{ addressOReducation }}</td>
+        </tr>
+      }
+      @if(isEPerson()){
+        <tr>
+          <td class="fw-semibold text-end">Education</td>
+          <td class="ps-2">{{ addressOReducation }}</td>
+        </tr>
+      }
+}
+```
+#### person table component ts
+για να μην στέλνει undefind
+```ts
+
+  addressOReducation: string = '';
+  isPerson():boolean {
+    if (this.personInput && 'address' in this.personInput) {
+      this.addressOReducation = this.personInput.address
+      return 'address' in this.personInput;
+    }
+    return false;
+  }
+
+  isEPerson():boolean {
+    if (this.personInput && 'education'in this.personInput){ 
+      this.addressOReducation = this.personInput.education
+      return 'education'in this.personInput;
+    }  
+    return false
+  }
+```
+
+#### template driven form example ts
+```ts
+  persons: EPerson[] = [];
+  currentPerson: EPerson = {
+    givenName: '',
+    surName: '',
+    age: '',
+    email:'',
+    education:''
+  };
+
+    onPerson(data: EPerson){
+    this.persons.push(data)
+    this.currentPerson = data;
+    console.log("Father", this.persons);
+  }
+```
+html
+```html
+    <app-person-table [personInput]="currentPerson"></app-person-table>
+    <app-simple-datatable [data]="persons"></app-simple-datatable>
+```
+
+
+
 
 
 
