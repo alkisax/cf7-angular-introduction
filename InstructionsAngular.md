@@ -1158,6 +1158,121 @@ html
     <app-simple-datatable [data]="persons"></app-simple-datatable>
 ```
 
+5/5/25
+
+# example to udate
+```bash
+ng update @angular/core@18 @angular/cli@18
+ng update @angular/material@18
+npm install typescript@latest --save-dev
+ng update @angular/core@19 @angular/cli@19
+ng update @angular/material@19
+```
+
+# δεύτερος τρόπος για φόρμες. Reactive φορμες
+- Αυτός είναι ο ευκολος τρόπος
+
+```bash
+ng generate component components/reactive-form-example
+ng generate component components/eperson-reactive-form
+```
+ο reactive form example Που θα καλεί τρία υποcomponents: τη φόρμα, το simple data table και το person table
+
+#### app.routes.ts
+```ts
+import { ReactiveFormExampleComponent } from './components/reactive-form-example/reactive-form-example.component';
+
+  { path: 'reactive-form-example', component: ReactiveFormExampleComponent},
+```
+
+#### list group menu ts
+```ts
+    { text: 'Reactive Form Example', linkName:'reactive-form-example'},
+```
+
+#### reactive form example ts
+κάνω ιμπορτ τα τρεια υποκομπονεντ
+```ts
+import { PersonTableComponent } from '../person-table/person-table.component';
+import { SimpleDatatableComponent } from '../simple-datatable/simple-datatable.component';
+import { EpersonReactiveFormComponent } from '../eperson-reactive-form/eperson-reactive-form.component';
+
+
+  imports: [
+    PersonTableComponent,
+    SimpleDatatableComponent,
+    EpersonReactiveFormComponent
+  ],
+
+```
+- απο την φορμα θα φτιαξουμε εναν χριστη και σαμπμιτ. αυτόν output και αφού τον διαβάσει ο πατέρας θα τον κάνει input στα άλλα δύο component app-person-table kai app-simple-datatable.
+#### html
+```html
+<h4>Reactive Form Example</h4>
+<div class="d-flex gap-4">
+  output ()
+  <!-- να εμφανιστεί το app eperson. απο εδώ θα κάνουμε output προς τον πατέρα reactive-form-example-component και αφού τα διαβάσει θα τα κάνει Input -> -->
+  <app-eperson-reactive-form (person)="onPerson($event)"></app-eperson-reactive-form>
+  <!-- d-flex flex-column το ένα κάτω απο το άλλο -->
+  <div class="d-flex flex-column gap-4">
+    input []
+    -> εδώ
+    <app-person-table [personInput]="currentPerson"></app-person-table>
+    <!-- να εμφανίσει το datatable -->
+    <!-- -> και εδώ -->
+    <app-simple-datatable [data]="persons"></app-simple-datatable>
+  </div>
+</div>
+```
+
+#### eprson reactive form ts
+```ts
+ολες οι βιβλιοθήκες για τις φορμες:
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators
+} from '@angular/forms';
+import { MatSelectModule } from '@angular/material/select';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatButtonModule } from '@angular/material/button';
+import { EPerson } from 'src/app/shared/Interfaces/eperson';
+
+@Component({
+  selector: 'app-eperson-reactive-form',
+  imports: [
+    ReactiveFormsModule,
+    MatSelectModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatButtonModule
+  ],
+  templateUrl: './eperson-reactive-form.component.html',
+  styleUrl: './eperson-reactive-form.component.css'
+})
+
+// φιαχνω ένα formgroup και του λέω τι πεδία έχει και βάζω αρχικές τιμές στις παρενθέσεις
+  form = new FormGroup({
+    givenName: new FormControl('',{nonNullable:true, validators: Validators.required}),
+    surName: new FormControl('',{nonNullable:true, validators: Validators.required}),
+// εδώ έχει αρχική τιμή το 18 και αντι για validator έχει ένα arr
+    age: new FormControl(18, [
+      Validators.required,
+      Validators.pattern('^[0-9]*$'),
+      Validators.min(18),
+      Validators.max(100)
+    ]),
+// kai πάλι επειδή δύο validator σε []
+    email: new FormControl('', [Validators.required, Validators.email]),
+    education: new FormControl('', Validators.required)
+  });
+```
+
+- αφού έφτιαξα την φόρμα μου πάω να φτιάξω το template
+
+
 
 
 
