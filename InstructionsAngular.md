@@ -1271,8 +1271,80 @@ import { EPerson } from 'src/app/shared/Interfaces/eperson';
 ```
 
 - αφού έφτιαξα την φόρμα μου πάω να φτιάξω το template
+#### eperson reactive form template html
+```html
+  <!-- με [] το input -->
+  <form [formGroup]="form" class="d-flex flex-column">
+    <mat-form-field> 
+      <mat-label>First Name</mat-label>
+      <input type="text" matInput formControlName="givenName" >
+      <mat-error>First name is required field</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Last Name</mat-label>
+      <input type="text" matInput formControlName="surName">
+      <mat-error>Last Name is required field</mat-error>
+    </mat-form-field>
+    etc
+  </form>
+  <button
+    mat-flat-button
+    color="primary"
+    [disabled] = "form.invalid"
+    (click)="onSubmit()"
+  >
+    Submit
+  </button>
+  <button (click)="onSetValue()">Set value</button>
 
+```
+- πριν το κάναμε με ngmodel
+- εδώ φτιάξαμε μια form με formgroup. Πισω ήταν  form = new FormGrou() εδώ η συνδεση γίνετε με το [formGroup]="form". ενω τα πεδιία που ήταν πίσω     givenName: new FormControl('', Validators.required), εδώ συνδεονται με το formControlName="givenName"  
 
+### τωρα να δουμε πως να εμφανίζονται αυτα που εβαλα αν κάνω submit
+
+```html
+    (click)="onSubmit(form.value)"
+```
+η onSubmit δεν υπάρχει στο ts:
+```ts
+  onSubmit(){
+    if (this.form.valid) {
+      // console.log(this.form.value);
+
+      const person: EPerson = {
+        givenName: this.form.value.givenName ?? '',
+        surName: this.form.value.surName ?? '',
+        age: String(this.form.value.age) ?? '',
+        email: this.form.value.email ?? '',
+        education: this.form.value.education ?? ''
+      }
+      this.person.emit(person);
+      this.form.reset()
+    }
+    // console.log("Data", data);
+    // console.log(this.form);
+    // console.log("givenName>>", this.form.controls['givenName'].value);
+    // this.form.controls["surName"].setValue("Papakis");
+    // console.log(this.form.value)
+  }
+
+```
+
+- αντίστοιχα φτιάχνουμε το   <button (click)="onSetValue()">Set value</button>
+```ts
+
+  onSetValue(){
+    // το this γιατι είναι μια public  μεταβλητή
+    this.form.setValue({
+      givenName: "Kostas",
+      surName:"Lalakis",
+      age: 39,
+      email:"kostas@aueb.gr",
+      education: "Bachelor degree"
+    })
+  }
+```
 
 
 
