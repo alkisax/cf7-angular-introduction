@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter, effect, inject, OnChanges, SimpleChanges, input } from '@angular/core';
 import { EPerson } from 'src/app/shared/Interfaces/eperson';
 import { sortBy } from 'lodash-es';
-// import { PersonService } from 'src/app/shared/services/person.service';
+import { PersonService } from 'src/app/shared/services/person.service';
 
 @Component({
   selector: 'app-simple-datatable',
@@ -14,7 +14,7 @@ export class SimpleDatatableComponent implements OnChanges {
   @Input() myData: boolean = true;
   @Output() personClicked = new EventEmitter<EPerson>()
 
-  // personService = inject(PersonService)
+  personService = inject(PersonService)
 
   epersonsData: EPerson[] = [];
 
@@ -29,15 +29,15 @@ export class SimpleDatatableComponent implements OnChanges {
     }
   }
 
-  // constructor(){
-  //   effect(()=>{
-  //     if(this.personService.modifiedDataTable()){
-  //       console.log("SIGNAL",this.data)
-  //       this.epersonsData = this.data
-  //     }
-  //     this.personService.modifiedDataTable.set(false);
-  //   })
-  // }
+  constructor(){
+    effect(()=>{
+      if(this.personService.modifiedDataTable()){
+        console.log("SIGNAL",this.data)
+        // this.epersonsData = this.data
+      }
+      this.personService.modifiedDataTable.set(false);
+    })
+  }
 
   sortOrder = {
     givenName: 'none',

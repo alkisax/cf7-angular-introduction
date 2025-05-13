@@ -1398,6 +1398,8 @@ import { EPerson } from 'src/app/shared/Interfaces/eperson';
     <app-simple-datatable [data]="persons"></app-simple-datatable>
 ```
 
+- problimata
+ng generate service shared/services/person
 
 
 
