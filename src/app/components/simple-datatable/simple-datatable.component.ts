@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter, effect, inject, OnChanges, SimpleChanges, input } from '@angular/core';
-import { EPerson } from 'src/app/shared/interfaces/eperson';
+import { EPerson } from 'src/app/shared/Interfaces/eperson';
 import { sortBy } from 'lodash-es';
 // import { PersonService } from 'src/app/shared/services/person.service';
 
