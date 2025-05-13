@@ -1,7 +1,7 @@
-
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { EPerson } from 'src/app/shared/Interfaces/eperson';
+import { Component, Input, Output, EventEmitter, effect, inject, OnChanges, SimpleChanges, input } from '@angular/core';
+import { EPerson } from 'src/app/shared/interfaces/eperson';
 import { sortBy } from 'lodash-es';
+// import { PersonService } from 'src/app/shared/services/person.service';
 
 @Component({
   selector: 'app-simple-datatable',
@@ -9,9 +9,35 @@ import { sortBy } from 'lodash-es';
   templateUrl: './simple-datatable.component.html',
   styleUrl: './simple-datatable.component.css'
 })
-export class SimpleDatatableComponent {
+export class SimpleDatatableComponent implements OnChanges {
   @Input() data: EPerson[] | undefined;
+  @Input() myData: boolean = true;
   @Output() personClicked = new EventEmitter<EPerson>()
+
+  // personService = inject(PersonService)
+
+  epersonsData: EPerson[] = [];
+
+  ngOnChanges(changes: SimpleChanges){
+    if (changes['data'] && this.data) {
+      console.log("ngOnChanges", this.data);
+      this.epersonsData = this.data
+    }
+    if (changes['myData']) {
+      console.log("MyData")
+      // this.myFunction();
+    }
+  }
+
+  // constructor(){
+  //   effect(()=>{
+  //     if(this.personService.modifiedDataTable()){
+  //       console.log("SIGNAL",this.data)
+  //       this.epersonsData = this.data
+  //     }
+  //     this.personService.modifiedDataTable.set(false);
+  //   })
+  // }
 
   sortOrder = {
     givenName: 'none',
@@ -22,13 +48,15 @@ export class SimpleDatatableComponent {
   }
 
   sortData(sortKey: keyof EPerson): void {
-    console.log(sortKey);
+    // console.log(sortKey);
+    // this.epersonsData = this.data;
+  
     if (this.sortOrder[sortKey]==='asc'){
       this.sortOrder[sortKey] = 'desc'
-      this.data = sortBy(this.data, sortKey).reverse();
+      this.epersonsData = sortBy(this.epersonsData, sortKey).reverse();
     } else {
       this.sortOrder[sortKey] = 'asc';
-      this.data = sortBy(this.data, sortKey);
+      this.epersonsData = sortBy(this.epersonsData, sortKey);
     }
     
     for (let key in this.sortOrder){
@@ -37,7 +65,7 @@ export class SimpleDatatableComponent {
       }
     }
 
-    console.log(this.sortOrder);
+    console.log("Simple DataTable", this.data);
   }
 
   sortSign(sortKey: keyof EPerson): string {
@@ -47,7 +75,7 @@ export class SimpleDatatableComponent {
   }
 
   onPersonClicked(person:EPerson){
-    console.log("Person>>",person)
+    console.log("Person>>",person);
     this.personClicked.emit(person);
   }
 }

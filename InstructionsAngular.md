@@ -1345,6 +1345,60 @@ import { EPerson } from 'src/app/shared/Interfaces/eperson';
     })
   }
 ```
+6/5/223
+- θέλω να παρω τα ντατα που έρχονται με το σαμπμιτ αυτης της φορμας  και να τα στείλω στον πατέρα (reactive form example) και απο εκεί στα αλλα δύο υποcomponent
+
+θα πρέπει να υλοποιήσουμε ένα @output να τα διαβάσει ο πατέρας και με @input να τα στείλει στα person table kai simple data table
+
+- αρχίζω με το αουτπουτ
+#### epperson reactive form components ts
+```ts
+  @Output() person = new EventEmitter<EPerson>()
+
+  // θα ενεργοποιειθεί στο onSubmit
+  //   this.person.emit(person);
+    onSubmit(){
+    if (this.form.valid) {
+      // console.log(this.form.value);
+
+      const person: EPerson = {
+        givenName: this.form.value.givenName ?? '',
+        surName: this.form.value.surName ?? '',
+        age: String(this.form.value.age) ?? '',
+        email: this.form.value.email ?? '',
+        education: this.form.value.education ?? ''
+      }
+      this.person.emit(person);
+      this.form.reset()
+    }
+    }
+```
+-  πάμε τωρα στον πατέρα
+#### reactive form example.html
+```html
+  <app-eperson-reactive-form (person)="onPerson($event)"></app-eperson-reactive-form>
+```
+#### ts
+```ts
+  // δημιουτγώ δυο πεδιά για να τα στείλω παρακάτω
+  currentPerson: EPerson | undefined;
+  persons: EPerson[] = [];
+
+  onPerson(data: EPerson){
+    // console.log("Father", data);
+    this.currentPerson = data;
+    this.persons.push(data);
+    // this.personService.modifiedDataTable.set(true)
+    console.log("Father", this.persons);
+  }
+```
+#### html
+```html
+    <app-person-table [personInput]="currentPerson"></app-person-table>
+    <app-simple-datatable [data]="persons"></app-simple-datatable>
+```
+
+
 
 
 
