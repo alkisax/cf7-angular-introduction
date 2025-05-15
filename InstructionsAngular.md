@@ -197,7 +197,7 @@ import { Person } from './shared/Interfaces/person';
 ```
 - οποτε πέτυχα κάτι σαν κλάση της java
 
-## στο person table ts 
+#### στο person table ts 
 - για να καταλάβει ότι κάποιος θα σου στείλει κάτι kai θα το βάλεις στο personInput. Είτε θα ικανοποιεί το Person ή undefined
 ```ts
 import { Component, input } from '@angular/core';
@@ -205,7 +205,7 @@ import { Component, input } from '@angular/core';
 
   @Input() personInput: Person | undefined
 ```
-## στο app html
+#### στο app html
 - στείλε το person0 kai person1 στο person-table-compontent
 - με []
 ```html
@@ -237,21 +237,24 @@ users: Person[] = [{},{}]
   </div>
   ```
 
-  ng generate component components/event-bind-example
-# -> επανάληψη 13/5
+
   ## ftiaxnoyμε ένα αππ μετρητή
+  ```bash
+  ng generate component components/event-bind-example
+  ```
   - εχω το html
   - import στο app.ts
   - παιρνω το σελεκτορ της νεας κλασης
+
 ```
   app-event-bind-example
-
 ```
+
   ```ts
   import { EventBindExampleComponent } from './components/event-bind-example/event-bind-example.component';
-  ```
-  imports: [PersonTableComponent, EventBindExampleComponent],
 
+  imports: [PersonTableComponent, EventBindExampleComponent],
+  ```
   - και στο app html
 <app-event-bind-example></app-event-bind-example>
 
@@ -262,8 +265,36 @@ users: Person[] = [{},{}]
     this.times = 0;
   }
 ```
+#### στο ts η λογική είναι
+```ts
+export class EventBindExampleComponent {
+  times: number = 0;
+  userInput: string = '';
 
-- στο app html
+  incrementTimes(){
+    // this.times = this.times + 1
+    this.times++;
+  }
+
+  decrementTimes(){
+    // this.times = this.times - 1;
+    this.times--;
+  }
+
+  reset(){
+    this.times = 0;
+  }
+
+  onUserInput(event: Event){
+    this.userInput = (<HTMLInputElement>event.target).value; //(<HTMLInputElement>event.target) tells TypeScript: "Trust me, this event came from an input element"
+  }
+
+}
+```
+
+# -> <font color="red">ως εδω επανάληψη 15/5</font>
+
+#### στο app html
 ```html
 <button 
   (click) = "decrementTimes()"
