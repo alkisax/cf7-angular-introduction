@@ -181,7 +181,7 @@ ng serve
 ### οι μεταβλητές δεν έχουν const μέσα σε κλαση
 
 - δημιουργώ έναν φακελο shared και μέσα βάζω τα interfaces Που θα χρησιμοποιηθουν απο πολλα 
-```
+```bash
 ng generate interface shared/Interfaces/person
 ```
 
@@ -199,12 +199,12 @@ import { Person } from './shared/Interfaces/person';
 
 ## στο person table ts 
 - για να καταλάβει ότι κάποιος θα σου στείλει κάτι kai θα το βάλεις στο personInput. Είτε θα ικανοποιεί το Person ή undefined
-
+```ts
 import { Component, input } from '@angular/core';
 // [...]
 
   @Input() personInput: Person | undefined
-
+```
 ## στο app html
 - στείλε το person0 kai person1 στο person-table-compontent
 - με []
@@ -238,7 +238,7 @@ users: Person[] = [{},{}]
   ```
 
   ng generate component components/event-bind-example
-
+# -> επανάληψη 13/5
   ## ftiaxnoyμε ένα αππ μετρητή
   - εχω το html
   - import στο app.ts
@@ -1398,12 +1398,225 @@ import { EPerson } from 'src/app/shared/Interfaces/eperson';
     <app-simple-datatable [data]="persons"></app-simple-datatable>
 ```
 
-- problimata
-ng generate service shared/services/person
+## problimata
+ng generate service shared/services/person  
 
+`this.persons.push(data);` κάνει mutate στο arr και οχι δημιουργία καινούργιου και έτσι δεν έχω αλλαγή state που θα προκαλέσει επαναφρεσκάρισμα στην σελλιδα
+για αυτό `ts this.persons = [...this.persons, data]`
 
+## ngOnChanges
+- σαν την useEffect??? simpledatable.ts
+```ts
+  ngOnChanges(changes: SimpleChanges){
+    if (changes['data'] && this.data) {
+      console.log("ngOnChanges", this.data);
+      this.epersonsData = this.data
+    }
+    if (changes['myData']) {
+      console.log("MyData")
+      // this.myFunction();
+    }
+  }
+```
 
+# http client - Επικοινωνία με το backend !!!!!! req/res
+```bash
+ng generate component components/http-client-example
+ng generate service shared/services/jokes
+ng genarate interface shared/Interfaces/jokes
+```
+ θα ρωταεί ένα api το api.chucknoris.io/jokes/random καθε φορά εμφανίζει ένα ανεκδοτο. και https://icanhazdadjoke.com/
 
+#### app.config.ts
+```ts
+import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { provideRouter } from '@angular/router';
+
+import { routes } from './app.routes';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes),
+    provideAnimationsAsync(),
+    provideHttpClient(withInterceptorsFromDi())
+  ]
+};
+```
+#### jokes.service.ts
+```ts
+// σε όλη την εφαρμογή αυτό το σερβις θα είναι γνώστό. και οπου αλλου την κάνω import
+import { HttpClient } from '@angular/common/http';
+@Injectable({
+  providedIn: 'root'
+})
+```
+
+```ts
+import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { DadJoke, ChuckNorrisJoke } from '../Interfaces/jokes';
+import { J } from '@angular/cdk/keycodes';
+
+const DAD_JOKES_API_URL = "https://icanhazdadjoke.com/";
+const JACK_NORRIS_JOKES_API_URL = 'https://api.chucknorris.io/jokes/random'
+
+@Injectable({
+  providedIn: 'root'
+})
+
+export class JokesService {
+  // αυτή η μεταβλιτή κληρονομοί όλλες τις ιδιώτητες του service HttpClient. Με το inject γιατί έχει @Injectable εδώ λίγο παραπάνω
+  http: HttpClient = inject(HttpClient);
+
+  // δεν κάνει κάτι. παλιότερα που δεν είχε ιντζεκτ εδώ δηλώναμε οτι κληρονομεί
+  // constructor(
+  //   public http = HttpClient()
+  // ) { }
+
+    getDadJokes(){
+    return this.http.get<DadJoke>(DAD_JOKES_API_URL, {
+      headers:{
+        Accept: "application/json"
+      }
+    })
+  }
+
+  getChuckNorrisJoke(){
+    return this.http.get<ChuckNorrisJoke>(JACK_NORRIS_JOKES_API_URL, {
+      headers: {
+        Accept: 'application/json'
+      }
+    })
+  }
+}
+```
+#### /Interface/jokes.ts
+- χρησιμοποιώ βοηθητικές ιστοσελιδες πχ from json to typescript
+```ts
+export interface DadJoke {
+  id: string
+  joke: string
+  status: number
+}
+
+export interface ChuckNorrisJoke {
+  categories: any[]
+  created_at: string
+  icon_url: string
+  id: string
+  updated_at: string
+  url: string
+  value: string
+}
+```
+
+- για να εμφανιστεί στην εφαρμογή μου
+#### app.routes
+```ts
+  { path: 'http-client-example', component: HttpClientExampleComponent},
+```
+#### list group  menu ts
+```ts
+    { text: 'HTTP client example', linkName:'http-client-example'}
+```
+
+---
+#### http-client-example.ts
+πρέπει να κάνει τα δύο ρικουεστ απο το σερβισ και να επιστρέψει το αποτέλεσμα (τα ανεκδοτα)
+**ngOnInit()**
+```ts
+  ngOnInit():void{
+    this.refreshChuckNorrisJoke();
+    this.refreshDadJoke();
+  }
+```
+- το **subscribe** κάνει αυτό που κάνει το await. οταν περιμένω να μου επιστρέψει κάτι 
+```ts
+import { Component, inject, OnInit } from '@angular/core';
+import { JokesService } from 'src/app/shared/services/jokes.service';
+
+export class HttpClientExampleComponent implements OnInit {
+  jokesService = inject(JokesService); //jJ
+
+  dadJoke: string = '';
+  chuckNorrisJoke: string = '';
+
+// με αυτό τρέχω κατί με το που φορτώσει η σελίδα
+  ngOnInit():void{
+    // this.jokesService.getDadJokes()
+    //   .subscribe((data)=>{
+    //     console.log("DAD JOKE", data)
+    //     console.log("Dad Joke", data.joke)
+    //   });
+
+    // this.jokesService.getChuckNorrisJoke()
+    //   .subscribe((data)=>{
+    //     console.log("CHUCK NORRIS", data);
+    //     console.log("Chuck Joke", data.value)
+    //   })
+    this.refreshChuckNorrisJoke();
+    this.refreshDadJoke();
+  }
+
+  refreshDadJoke(){
+    this.jokesService.getDadJokes()
+      .subscribe((data) =>{
+        console.log("Dad Joke", data.joke);
+        this.dadJoke = data.joke;
+      })
+  }
+
+  refreshChuckNorrisJoke(){
+    this.jokesService.getChuckNorrisJoke()
+      .subscribe((data) => {
+        console.log("Chuck Norris Joke", data.value);
+        this.chuckNorrisJoke = data.value;
+        // to ότι το ένα είχει joke και το άλλο value δεν έχει κάποια σημασία είναι γιατί έτσι είναι δηλωμένο το μοντελ που έρχετε απο το api 
+      })
+  }
+}
+```
+
+- τώρα που έλαβα τα ντάτα και τα διαμόρφωσα πρέπει να τα κάνω να εμφανιστουν στην σελίδα φτιαχνοντας το αντιστοιχοο τεμπλειτ
+#### ts
+```ts
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+
+  imports: [MatButtonModule, MatCardModule],
+```
+
+- `(click)="refreshDadJoke()"`
+#### http-client-example.html
+```html
+<div class="d-flex flex-column gap-2 mt-2 w-75">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Dad Joke</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <p class="text-wrap">{{ dadJoke }}</p>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-button (click)="refreshDadJoke()">Refresh</button>
+    </mat-card-actions>
+  </mat-card>
+
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Chuck Norris Joke</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <p class="text-wrap">{{ chuckNorrisJoke }}</p>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-button (click)="refreshChuckNorrisJoke()">Refresh</button>
+    </mat-card-actions>
+  </mat-card>
+</div>
+```
 
 
 
