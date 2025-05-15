@@ -1576,7 +1576,6 @@ export class HttpClientExampleComponent implements OnInit {
         // to ότι το ένα είχει joke και το άλλο value δεν έχει κάποια σημασία είναι γιατί έτσι είναι δηλωμένο το μοντελ που έρχετε απο το api 
       })
   }
-}
 ```
 
 - τώρα που έλαβα τα ντάτα και τα διαμόρφωσα πρέπει να τα κάνω να εμφανιστουν στην σελίδα φτιαχνοντας το αντιστοιχοο τεμπλειτ
@@ -1618,9 +1617,234 @@ import { MatButtonModule } from '@angular/material/button';
 </div>
 ```
 
+# user registration form
+- θα χρησιμοποιήσουμε το node απο τα προηγούμενα μαθήματα ως backend
+```bash
+ng generate component components/user-registration
+ng generate interface shared/Interfaces/user
+ng generate service shared/services/user
+ng generate environments
+```
+- το enviroments μας επιτρέπει να έχουμε δύο περιβάλλοντα τύπου development και working (Πχ άλλα url ή τεστ κλπ)
+#### environment.development.ts
+```ts
+export const environment = {
+  production: false,
+  apiURL: 'http://localhost:3000'
+};
+```
+#### environment.ts
+```ts
+export const environment = {
+  production: true,
+  apiURL: "https://coding-factory-backend.gr"
+};
+```
 
+- φτιάχνω το ιντερφεισ
+#### users.ts
+```ts
+export interface User {
+  username: string;
+  password: string;
+  name: string;
+  surname: string;
+  email: string;
+  address: {
+    area: string;
+    road: string
+  }
+}
+```
 
+- service
+- `@Injectable`
+- Θα χρησιμοποιήσω jwt οπότε πρέπει να το εγκαταστήσω
+```bash
 
+```
+#### user.service.ts
+``` ts
+import { Injectable, inject, signal, effect } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment.development';
+import { User, Credentials, LoggedInUser } from '../Interfaces/user';
+import { Router } from '@angular/router';
+import { jwtDecode } from 'jwt-decode';
+
+// τα routes τα βλέπω απο τον σερβερ στο backend
+const API_URL = `${environment.apiURL}/api/users`
+const API_URL_AUTH = `${environment.apiURL}/api/auth`
+
+@Injectable({
+  providedIn: 'root'
+})
+
+export class UserService {
+  http: HttpClient = inject(HttpClient);
+
+  registerUser(user:User) {
+    return this.http.post<{status: boolean, data: User}>(`${API_URL}`, user)
+  }
+}
+```
+
+- τώρα πρέπει να τα βάλω μέσα στην υπόλοιπη σελίδα για να τα βλέπω
+#### app.routes.ts
+```ts
+  { path: 'user-registration-example', component: UserRegistrationComponent},
+```
+#### list-group-menu.ts
+```ts
+  { text: 'user Registration Componenet', linkName:'user-registration-example'}
+```
+
+- Πάω τώρα να φτιάξω το html του rfegistration
+
+- πρώτα στο ts για την εμφάνιση
+```ts
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatButtonModule } from '@angular/material/button';
+
+@Component({
+  selector: 'app-user-registration',
+  imports: [
+    MatButtonModule, 
+    MatFormFieldModule, 
+    MatInputModule, 
+    ReactiveFormsModule
+  ],
+//...
+})
+```
+#### user-registration.component.html
+- αργοτερα θα πάω στο ts να φτιάξω τα `[formGroup]="form"` και `formControlName="username"`
+
+```html
+  <div class="d-flex flex-column mt-2 w-50">
+    <form [formGroup]="form" class="d-flex flex-column">
+      <mat-form-field>
+        <mat-label>Username</mat-label>
+        <input matInput type="text" formControlName="username">
+        <mat-error>Username is required</mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>First Name</mat-label>
+        <input matInput type="text" formControlName="name">
+        <mat-error>First Name is required</mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Last Name</mat-label>
+        <input matInput type="text" formControlName="surname">
+        <mat-error>Last Name is required</mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Email</mat-label>
+        <input type="text" matInput formControlName="email" (blur)="check_dublicate_email()">
+        @if(form.get('email')?.hasError('dublicateEmail')){
+          <mat-error>Email is already registered</mat-error>
+        } @else if(form.get('email')?.invalid && form.get('email')?.touched) {
+          <mat-error>Email is missing or invalid</mat-error>
+        }        
+      </mat-form-field>
+
+      <div class="d-flex gap-2" formGroupName="address">
+        <mat-form-field>
+          <mat-label>Area</mat-label>
+          <input type="text" matInput formControlName="area">
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Road</mat-label>
+          <input type="text" matInput formControlName="road">
+        </mat-form-field>
+      </div>
+
+      <mat-form-field>
+        <mat-label>Password</mat-label>
+        <input type="password" matInput formControlName="password">
+        @if (form.get('password')?.invalid && form.get('password')?.touched){
+          <mat-error>Password is missing or invalid</mat-error>
+        }      
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Confirm Password</mat-label>
+        <input type="password" matInput formControlName="confirmPassword"/>
+        @if(form.get("confirmPassword")?.hasError("passwordMismatch")){
+        <mat-error>Password do not match</mat-error>
+        } @else if (form.get("confirmPassword")?.invalid && form.get("confirmPassword")?.touched){
+        <mat-error>Confirm Password is missing or invalid</mat-error>
+        }      
+      </mat-form-field>
+
+      <button
+        mat-flat-button
+        color="primary"
+        [disabled]="form.invalid"
+        (click)="onSubmit()"
+        >Register
+      </button>
+    </form>
+  </div>
+
+  <button 
+    mat-flat-button
+    color="primary"
+    class="mt-2"
+    (click) = "registerAnother()"
+  >
+    Register Another User
+  </button>
+```
+
+- η φόρμα είναι εμφανισιακά εντάξη αλλά δεν έχει λειτορυγικότητα και φτιάχνω τη λογική στο ts (οχι template driven form αλλα reactive form)
+
+#### user registration component ts
+```ts
+import { 
+  AbstractControl,
+  FormControl, 
+  FormGroup, 
+  ReactiveFormsModule, 
+  Validators 
+} from '@angular/forms';
+
+//...
+
+  imports: [
+    MatButtonModule, 
+    MatFormFieldModule, 
+    MatInputModule, 
+    ReactiveFormsModule
+  ],
+//...
+
+export class UserRegistrationComponent {
+
+  // new FormGroup vs new FormGroup
+
+  form = new FormGroup({
+    username: new FormControl('', Validators.required),
+    name: new FormControl('', Validators.required),
+    surname: new FormControl('', Validators.required),
+    email: new FormControl('', [Validators.required, Validators.email]),
+    address: new FormGroup({
+      area: new FormControl(''),
+      road: new FormControl('')
+    }),
+    password: new FormControl('', [Validators.required, Validators.minLength(5)]),
+    confirmPassword: new FormControl('', [Validators.required, Validators.minLength(5)])
+  },
+    this.passwordConfirmValidator,
+  );
+}
+```
+- τωρα μπορώ να περάσω τα formcontrol στην φορμα (εχει γίνει)
 
 
 
