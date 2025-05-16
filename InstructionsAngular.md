@@ -1450,7 +1450,7 @@ ng generate service shared/services/person
   }
 ```
 
-# http client - Επικοινωνία με το backend !!!!!! req/res
+# http client - <font color="red"> Επικοινωνία με το backend  </font>!!!!!! req/res
 ```bash
 ng generate component components/http-client-example
 ng generate service shared/services/jokes
@@ -1876,7 +1876,133 @@ export class UserRegistrationComponent {
 }
 ```
 - τωρα μπορώ να περάσω τα formcontrol στην φορμα (εχει γίνει)
+```html
+<form [formGroup]="form" class="d-flex flex-column">
+  <input matInput type="text" formControlName="username">
+  <input matInput type="text" formControlName="name">
+  <input matInput type="text" formControlName="surname">
+  <input type="text" matInput formControlName="email" (blur)="check_dublicate_email()">
+  <div class="d-flex gap-2" formGroupName="address">
+    <input type="text" matInput formControlName="area">
+    <input type="text" matInput formControlName="road">
 
+  <button
+    mat-flat-button
+    color="primary"
+    [disabled]="form.invalid"
+    (click)="onSubmit()"
+    >Register
+  </button>
+```
+
+#### ts
+```ts
+  onSubmit(){
+    // const data = this.form.value as User;
+    const data: User = {
+      'username': this.form.get('username')?.value || '',
+      'password': this.form.get('password')?.value || '',
+      'name': this.form.get('name')?.value || '',
+      'surname': this.form.get('surname')?.value || '',
+      'email':this.form.get('email')?.value || '',
+      'address': {
+        'area':this.form.controls.address.controls.area?.value || '',
+        'road': this.form.controls.address.controls.road?.value || ''
+      }
+    }
+    console.log(data);
+    this.userService.registerUser(data)
+      .subscribe({
+        next: (response) => {
+          console.log("User Saved", response);
+          this.registrationStatus = {success: true, message: "User registrered"}
+        },
+        error: (response) => {
+          console.log("User not Saved", response.error.data.errorResponse.errmsg)
+          this.registrationStatus = {success: false, message: response.error.data.errorResponse.errmsg}
+        }
+      })
+  }
+```
+
+- τωρα διάφοροι ελεγχοι με if
+- είναι ίδια τα δύο πασσγουορντ;
+
+#### ts
+- `form.get('password')?.value;`
+```ts
+  form = new FormGroup({
+    //...
+    },
+    this.passwordConfirmValidator,
+  );
+
+// το abstractControl είναι η γενική κλάση του formgroup. πρέπει να γίνει import. Στα πρώτα {} μας λέει τι επιστρέψει ή ένα κλειδί ή ένα μπουλεαν
+  passwordConfirmValidator(control: AbstractControl): {[key:string]: boolean} | null {
+    const form = control as FormGroup;
+    
+    const password = form.get('password')?.value;
+    const confirmPassword = form.get('confirmPassword')?.value
+
+    if(password && confirmPassword && password!==confirmPassword) {
+      form.get('confirmPassword')?.setErrors({passwordMismatch: true})
+      return {passwordMismatch: true}
+    }
+    // μου επιστρέφει ή PasswordMismatch ή null. Αυτό θα πρέπει να το διαχειρηστώ στην html
+    return null
+  }
+```
+#### html
+```html
+      <mat-form-field>
+        <mat-label>Confirm Password</mat-label>
+        <input type="password" matInput formControlName="confirmPassword"/>
+        @if(form.get("confirmPassword")?.hasError("passwordMismatch")){
+        <mat-error>Password do not match</mat-error>
+        } @else if (form.get("confirmPassword")?.invalid && form.get("confirmPassword")?.touched){
+        <mat-error>Confirm Password is missing or invalid</mat-error>
+        }      
+      </mat-form-field>
+```
+
+- έλεγχος για το ημαιλ αν υπάρχει στην βάση
+- `this.form.get("email")?.value;`
+#### ts
+```ts
+  check_dublicate_email(){
+    const email = this.form.get("email")?.value;
+
+    if (email){
+      console.log("email", email);
+      this.userService.check_dublicate_email(email)
+        .subscribe({
+          next: (response) => {
+            console.log("Email OK",response);
+            this.form.get("email")?.setErrors(null)
+          },
+          error: (response) => {
+            console.log(response);
+            const message = response.data;
+            console.log("Email not OK",message);
+            this.form.get('email')?.setErrors({dublicateEmail: true})
+          }
+        })
+    }
+  }
+```
+#### html
+```html
+      <mat-form-field>
+        <mat-label>Email</mat-label>
+        <input type="text" matInput formControlName="email" (blur)="check_dublicate_email()">
+        @if(form.get('email')?.hasError('dublicateEmail')){
+          <mat-error>Email is already registered</mat-error>
+        } @else if(form.get('email')?.invalid && form.get('email')?.touched) {
+          <mat-error>Email is missing or invalid</mat-error>
+        }
+        
+      </mat-form-field>
+```
 
 
 
