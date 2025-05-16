@@ -1,3 +1,124 @@
+<!-- TOC start (generated with https://github.com/derlin/bitdowntoc) -->
+
+- [TypeScript](#typescript)
+      + [extension vscode coderunner](#extension-vscode-coderunner)
+   * [tsconfig.json](#tsconfigjson)
+      + [και με το βελάκι |> επάνω δεξια στο vs το τρέχει](#-vs-)
+- [εγκατάσταση Angular](#-angular)
+- [καινούργιο Angular](#-angular-1)
+   * [αρχικα settings:](#-settings)
+         - [(το πήγα στον εξωτερικο σκληρο λογο χωρου)](#-)
+      + [στο tsconfig.json](#-tsconfigjson)
+   * [το τρέχω με](#--1)
+- [github pages](#github-pages)
+   * [package.json](#packagejson)
+- [αρχίζουμε την εφαρμογή](#--2)
+      + [στο components.ts](#-componentsts)
+      + [την μεταβλητή στο html](#-html)
+      + [δημιουργία νέου component](#-component)
+- [αν τωρα θέλω ο πατέρας να περάσει data στο component child](#-data-component-child)
+      + [οι μεταβλητές δεν έχουν const μέσα σε κλαση](#-const-)
+         - [στο person table ts ](#-person-table-ts)
+         - [στο app html](#-app-html)
+   * [για να στείλω ένα arr](#-arr)
+         - [στο ts η λογική είναι](#-ts-)
+- [-> <font color="red">ως εδω επανάληψη 15/5</font>](#-155)
+         - [στο app html](#-app-html-1)
+- [νεο component για routing](#-component-routing)
+      + [τωρα θα χρησιμοποιήσουμε και τα αρχείο app.routes.ts που δημιουργήθηκε με την αρχική δημιουργία](#-approutests-)
+   * [λογική: ](#)
+      + [χρειάζομαι και αυτό για το home](#-home)
+   * [κάνω τα κουμπιά μου λειτουργικα](#--3)
+   * [φτιαχνουμε καλυτερα το μενού](#--4)
+   * [νεο κομπονεντ](#--5)
+   * [θα κάνουμε ταξινόμιση στο @for directive example](#-for-directive-example)
+      + [δυο νέα components](#-components)
+   * [θέλω αν κάνω διπλό κλικ σε μια γραμμη και μετά να μου κάνει ένα consol log](#-consol-log)
+         - [html](#html)
+         - [ts](#ts)
+   * [ascending η descending](#ascending-descending)
+         - [στο simple datable components ts](#-simple-datable-components-ts)
+         - [στο html ](#-html-1)
+         - [html](#html-1)
+         - [παω στο ts να φτιάξω την sortSign](#-ts-sortsign)
+- [μέχρι τώρα βλέπαμε πως ο πατέρας έστελνε ντατα στο παιδί. τώρα θα δούμε το αντίστροφο.](#--6)
+         - [ts](#ts-1)
+         - [στο path](#-path)
+         - [στο list-group-menu.ts](#-list-group-menuts)
+   * [θέλω με διπλό κλικ να επιστρέψει στο component-output-exampl (στον πατέρα) και αυτό να μου τα στείλει με alert](#-component-output-exampl-alert)
+         - [simple datatable ts](#simple-datatable-ts)
+         - [component outpout html](#component-outpout-html)
+      + [το input με [] το output σε ()](#-input-output-)
+         - [η showPersonClicked στο οutput example ts](#-showpersonclicked-utput-example-ts)
+      + [το alert pop up δεν είναι καλός τρόπος. Είτε modal απο bootstrap, είτε meterial design](#-alert-pop-up-modal-bootstrap-meterial-design)
+- [Material design](#material-design)
+         - [output example ts](#output-example-ts)
+- [φορμες](#-1)
+      + [φτιαχνω δυο components](#-components-1)
+         - [app routes](#app-routes)
+         - [list group menu ts](#list-group-menu-ts)
+   * [θέλω μια φορμα και οταν πατάω υποβολή να μου τα εμφανίζει στα δεξια](#--7)
+         - [template driven form html](#template-driven-form-html)
+         - [template driven form ts](#template-driven-form-ts)
+         - [eperson template ts](#eperson-template-ts)
+         - [eperson template driven form html](#eperson-template-driven-form-html)
+      + [πως να γινονται αντιλιπτα τα στοιχεία που περάστικαν στην φόρμα](#--8)
+         - [eperson template drive form ts  ](#eperson-template-drive-form-ts)
+         - [πατέρας -> template drivern form example.ts](#-template-drivern-form-examplets)
+         - [template driven form example.html](#template-driven-form-examplehtml)
+         - [person table component html](#person-table-component-html)
+         - [person table component ts](#person-table-component-ts)
+         - [template driven form example ts](#template-driven-form-example-ts)
+- [example to udate](#example-to-udate)
+- [δεύτερος τρόπος για φόρμες. Reactive φορμες](#-reactive-)
+         - [app.routes.ts](#approutests)
+         - [list group menu ts](#list-group-menu-ts-1)
+         - [reactive form example ts](#reactive-form-example-ts)
+         - [html](#html-2)
+         - [eprson reactive form ts](#eprson-reactive-form-ts)
+         - [eperson reactive form template html](#eperson-reactive-form-template-html)
+      + [τωρα να δουμε πως να εμφανίζονται αυτα που εβαλα αν κάνω submit](#-submit)
+         - [epperson reactive form components ts](#epperson-reactive-form-components-ts)
+         - [reactive form example.html](#reactive-form-examplehtml)
+         - [ts](#ts-2)
+         - [html](#html-3)
+   * [problimata](#problimata)
+   * [ngOnChanges](#ngonchanges)
+- [http client - <font color="red"> Επικοινωνία με το backend  </font>!!!!!! req/res](#http-client-backend-reqres)
+         - [app.config.ts](#appconfigts)
+         - [jokes.service.ts](#jokesservicets)
+         - [/Interface/jokes.ts](#interfacejokests)
+         - [app.routes](#approutes)
+         - [list group  menu ts](#list-group-menu-ts-2)
+         - [http-client-example.ts](#http-client-examplets)
+         - [ts](#ts-3)
+         - [http-client-example.html](#http-client-examplehtml)
+- [user registration form](#user-registration-form)
+         - [environment.development.ts](#environmentdevelopmentts)
+         - [environment.ts](#environmentts)
+         - [users.ts](#usersts)
+         - [user.service.ts](#userservicets)
+         - [app.routes.ts](#approutests-1)
+         - [list-group-menu.ts](#list-group-menuts)
+         - [user-registration.component.html](#user-registrationcomponenthtml)
+         - [user registration component ts](#user-registration-component-ts)
+         - [ts](#ts-4)
+         - [ts](#ts-5)
+         - [html](#html-4)
+         - [user.routes](#userroutes)
+         - [user.controller](#usercontroller)
+         - [user.serviice](#userserviice)
+         - [ts](#ts-6)
+         - [html](#html-5)
+         - [user.service.ts](#userservicets-1)
+         - [ts](#ts-7)
+         - [html](#html-6)
+         - [ts](#ts-8)
+         - [html](#html-7)
+
+<!-- TOC end -->
+
+<!-- TOC --><a name="typescript"></a>
 # TypeScript
 
 node --experimental-strip-types example2.ts
@@ -11,8 +132,10 @@ tsc example2.ts
 npm install -global ts-node
 ```
 
+<!-- TOC --><a name="extension-vscode-coderunner"></a>
 ### extension vscode coderunner
 
+<!-- TOC --><a name="tsconfigjson"></a>
 ## tsconfig.json
 ```
 {
@@ -29,26 +152,33 @@ npm install -global ts-node
   "lib": ["ES2024"]
 }
 ```
+<!-- TOC --><a name="-vs-"></a>
 ### και με το βελάκι |> επάνω δεξια στο vs το τρέχει
 
+<!-- TOC --><a name="-angular"></a>
 # εγκατάσταση Angular
 ```bash
 npm install -g @angular/cli
 ng version
 ```
+<!-- TOC --><a name="-angular-1"></a>
 # καινούργιο Angular
+<!-- TOC --><a name="-settings"></a>
 ## αρχικα settings:
 ```bash
 ng new angular-introduction
 ```
+<!-- TOC --><a name="-"></a>
 #### (το πήγα στον εξωτερικο σκληρο λογο χωρου)
 - cd /e/coding/CF7TESTBEDANGULAR
 
+<!-- TOC --><a name="-tsconfigjson"></a>
 ### στο tsconfig.json
 ```
     "baseUrl": "./",
 ```
 
+<!-- TOC --><a name="--1"></a>
 ## το τρέχω με
 ```bash
 ng serve
@@ -87,6 +217,7 @@ npm install --save-dev prettier
 }
 ```
 
+<!-- TOC --><a name="github-pages"></a>
 # github pages
 git init κάνει απο μόνο του το Angular
 ```bash
@@ -97,6 +228,7 @@ ng add angular-cli-ghpages
 
 ```
 
+<!-- TOC --><a name="packagejson"></a>
 ## package.json
 οταν τρέξουμε το deploy ανεβάζει αυτό που κάνει build στην σελίδα που δίνουμε
 ```
@@ -114,9 +246,11 @@ npm run deploy
 ```
 και αν πάω στην σελίδα το βλέπω
 
+<!-- TOC --><a name="--2"></a>
 # αρχίζουμε την εφαρμογή
 θέλω να περάσω απο το component (που είναι ο controller μου) στο html (που είναι το template μου). Αυτή είναι η λογική του angular
 
+<!-- TOC --><a name="-componentsts"></a>
 ### στο components.ts
 ```typescript
 export class AppComponent {
@@ -131,6 +265,7 @@ export class AppComponent {
 }
 ```
 
+<!-- TOC --><a name="-html"></a>
 ### την μεταβλητή στο html
 ```
 {{ name }}
@@ -143,6 +278,7 @@ export class AppComponent {
 ng serve
 ```
 
+<!-- TOC --><a name="-component"></a>
 ### δημιουργία νέου component
 
 ```bash
@@ -176,8 +312,10 @@ import { PersonTableComponent } from './components/person-table/person-table.com
 ng serve
 ```
 
+<!-- TOC --><a name="-data-component-child"></a>
 # αν τωρα θέλω ο πατέρας να περάσει data στο component child
 
+<!-- TOC --><a name="-const-"></a>
 ### οι μεταβλητές δεν έχουν const μέσα σε κλαση
 
 - δημιουργώ έναν φακελο shared και μέσα βάζω τα interfaces Που θα χρησιμοποιηθουν απο πολλα 
@@ -197,6 +335,7 @@ import { Person } from './shared/Interfaces/person';
 ```
 - οποτε πέτυχα κάτι σαν κλάση της java
 
+<!-- TOC --><a name="-person-table-ts"></a>
 #### στο person table ts 
 - για να καταλάβει ότι κάποιος θα σου στείλει κάτι kai θα το βάλεις στο personInput. Είτε θα ικανοποιεί το Person ή undefined
 ```ts
@@ -205,6 +344,7 @@ import { Component, input } from '@angular/core';
 
   @Input() personInput: Person | undefined
 ```
+<!-- TOC --><a name="-app-html"></a>
 #### στο app html
 - στείλε το person0 kai person1 στο person-table-compontent
 - με []
@@ -222,6 +362,7 @@ import { Component, input } from '@angular/core';
 ```
 επειδή στο personInput πότε βάζουμε τιμή και πότε είναι undefined (πχ στο ```<app-person-table></app-person-table>)```) βάζουμε το ? για να μην αναζητά το .givenName αν null
 
+<!-- TOC --><a name="-arr"></a>
 ## για να στείλω ένα arr
 - app ts
 ```ts
@@ -265,6 +406,7 @@ users: Person[] = [{},{}]
     this.times = 0;
   }
 ```
+<!-- TOC --><a name="-ts-"></a>
 #### στο ts η λογική είναι
 ```ts
 export class EventBindExampleComponent {
@@ -292,8 +434,10 @@ export class EventBindExampleComponent {
 }
 ```
 
+<!-- TOC --><a name="-155"></a>
 # -> <font color="red">ως εδω επανάληψη 15/5</font>
 
+<!-- TOC --><a name="-app-html-1"></a>
 #### στο app html
 ```html
 <button 
@@ -307,6 +451,7 @@ export class EventBindExampleComponent {
 **πατέρας προς παιδι @input**  
 **παιδί προς πατέρα @output**
 
+<!-- TOC --><a name="-component-routing"></a>
 # νεο component για routing
 ```bash
 ng generate component components/welcome
@@ -321,6 +466,7 @@ ng generate component components/component-input-example
 <span role="button" routerLink="event-bind-example">Event Bind Example</span>
 ```
 
+<!-- TOC --><a name="-approutests-"></a>
 ### τωρα θα χρησιμοποιήσουμε και τα αρχείο app.routes.ts που δημιουργήθηκε με την αρχική δημιουργία
 
 - εδω θα φτιάξω endpoints
@@ -357,6 +503,7 @@ import { RouterOutlet } from '@angular/router';
 imports: [PersonTableComponent, EventBindExampleComponent, RouterOutlet]
 ```
 
+<!-- TOC --><a name=""></a>
 ## λογική: 
 - αν δει στο παθ welcome πάει να φέρει το περιεχόμενο του welcomeComponent
 ```ts
@@ -372,12 +519,14 @@ imports: [PersonTableComponent, EventBindExampleComponent, RouterOutlet]
   imports: [PersonTableComponent, EventBindExampleComponent, RouterOutlet],
 ```
 
+<!-- TOC --><a name="-home"></a>
 ### χρειάζομαι και αυτό για το home
 - pathMatch:'full' (?)
 ```ts
   { path: '', redirectTo:'/welcome', pathMatch:'full' }
 ````
 
+<!-- TOC --><a name="--3"></a>
 ## κάνω τα κουμπιά μου λειτουργικα
 - στο app ts
 
@@ -409,7 +558,9 @@ import { RouterOutlet, RouterLink } from '@angular/router';
     this.userInput = (<HTMLInputElement>event.target).value; //(<HTMLInputElement>event.target) tells TypeScript: "Trust me, this event came from an input element"
   }
 ```
+<!-- TOC --><a name="--4"></a>
 ## φτιαχνουμε καλυτερα το μενού
+<!-- TOC --><a name="--5"></a>
 ## νεο κομπονεντ
 ```bash
 ng generate component components/list-group-menu
@@ -454,8 +605,10 @@ import { ListGroupMenuComponent } from './components/list-group-menu/list-group-
       <span class="flex-grow-1 p-2 text-nowrap w-75">
 ```
 
+<!-- TOC --><a name="-for-directive-example"></a>
 ## θα κάνουμε ταξινόμιση στο @for directive example
 
+<!-- TOC --><a name="-components"></a>
 ### δυο νέα components
 ```bash
     ng generate component components/simple-datatable-example
@@ -582,11 +735,14 @@ export class SimpleDatatableComponent {
 </table>
 ```
 
+<!-- TOC --><a name="-consol-log"></a>
 ## θέλω αν κάνω διπλό κλικ σε μια γραμμη και μετά να μου κάνει ένα consol log
+<!-- TOC --><a name="html"></a>
 #### html
 ```html
       <tr class="align-middle" (dblclick)="onPersonClicked(row)">
 ```
+<!-- TOC --><a name="ts"></a>
 #### ts
 ```ts
   onPersonClicked(person:EPerson){
@@ -594,6 +750,7 @@ export class SimpleDatatableComponent {
   }
 ```
 
+<!-- TOC --><a name="ascending-descending"></a>
 ## ascending η descending
 - βιβλιοθήκη για ταξινόμηση
 ```bash
@@ -605,6 +762,7 @@ npm i --save-dev @types/lodash-es
 ```
 
 
+<!-- TOC --><a name="-simple-datable-components-ts"></a>
 #### στο simple datable components ts
 ```ts
 import { sortBy } from 'lodash-es';
@@ -618,6 +776,7 @@ import { sortBy } from 'lodash-es';
   }
 ```
 
+<!-- TOC --><a name="-html-1"></a>
 #### στο html 
 ```html
   <thead>
@@ -656,6 +815,7 @@ import { sortBy } from 'lodash-es';
 το ag grid είναι μια καλή βιβλιοθήκη για να έχουμε ετοιμο grid δεδομένων
 
 - παω να προσθέσω σύμβολο που να λέει αν υπάρχει ταξινόμηση και τι
+<!-- TOC --><a name="html-1"></a>
 #### html
 ```html
   <thead>
@@ -679,6 +839,7 @@ import { sortBy } from 'lodash-es';
   </thead>
 ```
 
+<!-- TOC --><a name="-ts-sortsign"></a>
 #### παω στο ts να φτιάξω την sortSign
 ```ts
   sortSign(sortKey: keyof EPerson): string {
@@ -688,6 +849,7 @@ import { sortBy } from 'lodash-es';
   }
 ```
 
+<!-- TOC --><a name="--6"></a>
 # μέχρι τώρα βλέπαμε πως ο πατέρας έστελνε ντατα στο παιδί. τώρα θα δούμε το αντίστροφο.
 - ο πατέρας
 ```html
@@ -700,6 +862,7 @@ import { sortBy } from 'lodash-es';
 ng generate component components/component-output-example
 ```
 
+<!-- TOC --><a name="ts-1"></a>
 #### ts
 ```ts
 import { EPerson, ManyPerson } from 'src/app/shared/interfaces/eperson';
@@ -716,16 +879,20 @@ import { SimpleDatatableComponent } from 'src/app/components/simple-datatable/si
 ```
 
 - επειδή δεν τα βλέπω αυτα πρέπει να μπουν στο κεντρικο app
+<!-- TOC --><a name="-path"></a>
 #### στο path
 ```ts
 { path: 'component-output-example', component: ComponentOutputExampleComponent },
 ```
+<!-- TOC --><a name="-list-group-menuts"></a>
 #### στο list-group-menu.ts
 ```ts
     { text: 'component Output Example', linkName: 'component-output-example'},
 ```
+<!-- TOC --><a name="-component-output-exampl-alert"></a>
 ## θέλω με διπλό κλικ να επιστρέψει στο component-output-exampl (στον πατέρα) και αυτό να μου τα στείλει με alert
 
+<!-- TOC --><a name="simple-datatable-ts"></a>
 #### simple datatable ts
 στο παιδί δηλώνω μια μεταβλητή τύπου @output, αυτό είναι ένα event και λέω τι τύπου δεδομένα θα στείλω και αρχική τιμή τίποτα ()
 ```ts
@@ -742,13 +909,16 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 ```
 
 τωρα να δούμε πως ο πατέρας θα διαβάσει αυτό που του στέλνει το παιδι.
+<!-- TOC --><a name="component-outpout-html"></a>
 #### component outpout html
 να στείλει τα ντατα σε μια διαδικασια που λέγετε showpersonclicked
+<!-- TOC --><a name="-input-output-"></a>
 ### το input με [] το output σε ()
 ```html
 <h4>Component Output Example</h4>
 <app-simple-datatable [data]="manyPerson" (personClicked)="showPersonClicked($event)"></app-simple-datatable>
 ```
+<!-- TOC --><a name="-showpersonclicked-utput-example-ts"></a>
 #### η showPersonClicked στο οutput example ts
 ```ts
   showPersonClicked(person: EPerson) {
@@ -768,8 +938,10 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
     `
   }
 ```
+<!-- TOC --><a name="-alert-pop-up-modal-bootstrap-meterial-design"></a>
 ### το alert pop up δεν είναι καλός τρόπος. Είτε modal απο bootstrap, είτε meterial design
 
+<!-- TOC --><a name="material-design"></a>
 # Material design
 το components έχει και το styling ενω το cdk οχι
 
@@ -779,6 +951,7 @@ ng add @angular/material
 ```
 - παίρνω κώδικα απο https://material.angular.dev/cdk/dialog/overview
 
+<!-- TOC --><a name="output-example-ts"></a>
 #### output example ts
 ```ts
 import {
@@ -853,16 +1026,19 @@ export class PersonDialogComponent {
 }
 ```
 
+<!-- TOC --><a name="-1"></a>
 # φορμες
 - template driven forms
 - reactive forms (αυτό είναι το συνηθισμενο)
 
+<!-- TOC --><a name="-components-1"></a>
 ### φτιαχνω δυο components
 ```bash
 ng generate component components/template-driven-form-example
 
 ng generate component components/eperson-template-driven-form
 ```
+<!-- TOC --><a name="app-routes"></a>
 #### app routes
 ```ts
 import { TemplateDrivenFormExampleComponent } from './components/template-driven-form-example/template-driven-form-example.component';
@@ -870,6 +1046,7 @@ import { TemplateDrivenFormExampleComponent } from './components/template-driven
   { path: 'template-driven-form-example', component: TemplateDrivenFormExampleComponent},
 ```
 
+<!-- TOC --><a name="list-group-menu-ts"></a>
 #### list group menu ts
 ```ts
 export class ListGroupMenuComponent {
@@ -884,8 +1061,10 @@ export class ListGroupMenuComponent {
 }
 ```
 
+<!-- TOC --><a name="--7"></a>
 ## θέλω μια φορμα και οταν πατάω υποβολή να μου τα εμφανίζει στα δεξια
 
+<!-- TOC --><a name="template-driven-form-html"></a>
 #### template driven form html
 ```html
 <h4>Template Driven Form Example</h4>
@@ -898,6 +1077,7 @@ export class ListGroupMenuComponent {
 </div>
 ```
 
+<!-- TOC --><a name="template-driven-form-ts"></a>
 #### template driven form ts
 κάνω τα ιμπορτ 
 ```ts
@@ -906,6 +1086,7 @@ import { PersonTableComponent } from '../person-table/person-table.component';
 import { SimpleDatatableComponent } from '../simple-datatable/simple-datatable.component';
 ```
 
+<!-- TOC --><a name="eperson-template-ts"></a>
 #### eperson template ts
 - - ολα αυτά ειναι βιβλιοθήκες για τις φορμες
 ```ts
@@ -930,6 +1111,7 @@ import { EPerson } from 'src/app/shared/Interfaces/eperson';
   styleUrl: './eperson-template-driven-form.component.css'
 })
 ```
+<!-- TOC --><a name="eperson-template-driven-form-html"></a>
 #### eperson template driven form html
 mat-form-field mat-label mat-select/mat-option mat-error
 ```html
@@ -994,6 +1176,7 @@ mat-form-field mat-label mat-select/mat-option mat-error
   </button>
   <button (click)="onSetValue()">Set Value</button>
 ```
+<!-- TOC --><a name="--8"></a>
 ### πως να γινονται αντιλιπτα τα στοιχεία που περάστικαν στην φόρμα
 
 - βάζω ονόματα στις φόρμες:  
@@ -1012,6 +1195,7 @@ mat-form-field mat-label mat-select/mat-option mat-error
 - η συάρτηση βρίσκετε στο component  
 ```(click)="onSubmit(eForm.value)" ```
 
+<!-- TOC --><a name="eperson-template-drive-form-ts"></a>
 #### eperson template drive form ts  
 ```ts
 import { EPerson } from 'src/app/shared/Interfaces/eperson';
@@ -1076,6 +1260,7 @@ import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
   }
 ```
 
+<!-- TOC --><a name="-template-drivern-form-examplets"></a>
 #### πατέρας -> template drivern form example.ts
 
 ```ts
@@ -1098,6 +1283,7 @@ export class TemplateDrivenFormExampleComponent {
 }
 ```
 
+<!-- TOC --><a name="template-driven-form-examplehtml"></a>
 #### template driven form example.html
 input [] output ()
 ```html
@@ -1123,6 +1309,7 @@ input [] output ()
 
 - στο person table component html  <td class="ps-2">{{personInput?.address}}</td>
 θα πρέπει να κάνω αλλαγήσ το person γιατί δεν έχει address
+<!-- TOC --><a name="person-table-component-html"></a>
 #### person table component html
 ```html
 @if (!personInput){
@@ -1144,6 +1331,7 @@ input [] output ()
       }
 }
 ```
+<!-- TOC --><a name="person-table-component-ts"></a>
 #### person table component ts
 για να μην στέλνει undefind
 ```ts
@@ -1166,6 +1354,7 @@ input [] output ()
   }
 ```
 
+<!-- TOC --><a name="template-driven-form-example-ts"></a>
 #### template driven form example ts
 ```ts
   persons: EPerson[] = [];
@@ -1191,6 +1380,7 @@ html
 
 5/5/25
 
+<!-- TOC --><a name="example-to-udate"></a>
 # example to udate
 ```bash
 ng update @angular/core@18 @angular/cli@18
@@ -1200,6 +1390,7 @@ ng update @angular/core@19 @angular/cli@19
 ng update @angular/material@19
 ```
 
+<!-- TOC --><a name="-reactive-"></a>
 # δεύτερος τρόπος για φόρμες. Reactive φορμες
 - Αυτός είναι ο ευκολος τρόπος
 
@@ -1209,6 +1400,7 @@ ng generate component components/eperson-reactive-form
 ```
 ο reactive form example Που θα καλεί τρία υποcomponents: τη φόρμα, το simple data table και το person table
 
+<!-- TOC --><a name="approutests"></a>
 #### app.routes.ts
 ```ts
 import { ReactiveFormExampleComponent } from './components/reactive-form-example/reactive-form-example.component';
@@ -1216,11 +1408,13 @@ import { ReactiveFormExampleComponent } from './components/reactive-form-example
   { path: 'reactive-form-example', component: ReactiveFormExampleComponent},
 ```
 
+<!-- TOC --><a name="list-group-menu-ts-1"></a>
 #### list group menu ts
 ```ts
     { text: 'Reactive Form Example', linkName:'reactive-form-example'},
 ```
 
+<!-- TOC --><a name="reactive-form-example-ts"></a>
 #### reactive form example ts
 κάνω ιμπορτ τα τρεια υποκομπονεντ
 ```ts
@@ -1237,6 +1431,7 @@ import { EpersonReactiveFormComponent } from '../eperson-reactive-form/eperson-r
 
 ```
 - απο την φορμα θα φτιαξουμε εναν χριστη και σαμπμιτ. αυτόν output και αφού τον διαβάσει ο πατέρας θα τον κάνει input στα άλλα δύο component app-person-table kai app-simple-datatable.
+<!-- TOC --><a name="html-2"></a>
 #### html
 ```html
 <h4>Reactive Form Example</h4>
@@ -1256,6 +1451,7 @@ import { EpersonReactiveFormComponent } from '../eperson-reactive-form/eperson-r
 </div>
 ```
 
+<!-- TOC --><a name="eprson-reactive-form-ts"></a>
 #### eprson reactive form ts
 ```ts
 ολες οι βιβλιοθήκες για τις φορμες:
@@ -1302,6 +1498,7 @@ import { EPerson } from 'src/app/shared/Interfaces/eperson';
 ```
 
 - αφού έφτιαξα την φόρμα μου πάω να φτιάξω το template
+<!-- TOC --><a name="eperson-reactive-form-template-html"></a>
 #### eperson reactive form template html
 ```html
   <!-- με [] το input -->
@@ -1332,6 +1529,7 @@ import { EPerson } from 'src/app/shared/Interfaces/eperson';
 - πριν το κάναμε με ngmodel
 - εδώ φτιάξαμε μια form με formgroup. Πισω ήταν  form = new FormGrou() εδώ η συνδεση γίνετε με το [formGroup]="form". ενω τα πεδιία που ήταν πίσω     givenName: new FormControl('', Validators.required), εδώ συνδεονται με το formControlName="givenName"  
 
+<!-- TOC --><a name="-submit"></a>
 ### τωρα να δουμε πως να εμφανίζονται αυτα που εβαλα αν κάνω submit
 
 ```html
@@ -1382,6 +1580,7 @@ import { EPerson } from 'src/app/shared/Interfaces/eperson';
 θα πρέπει να υλοποιήσουμε ένα @output να τα διαβάσει ο πατέρας και με @input να τα στείλει στα person table kai simple data table
 
 - αρχίζω με το αουτπουτ
+<!-- TOC --><a name="epperson-reactive-form-components-ts"></a>
 #### epperson reactive form components ts
 ```ts
   @Output() person = new EventEmitter<EPerson>()
@@ -1405,10 +1604,12 @@ import { EPerson } from 'src/app/shared/Interfaces/eperson';
     }
 ```
 -  πάμε τωρα στον πατέρα
+<!-- TOC --><a name="reactive-form-examplehtml"></a>
 #### reactive form example.html
 ```html
   <app-eperson-reactive-form (person)="onPerson($event)"></app-eperson-reactive-form>
 ```
+<!-- TOC --><a name="ts-2"></a>
 #### ts
 ```ts
   // δημιουτγώ δυο πεδιά για να τα στείλω παρακάτω
@@ -1423,18 +1624,21 @@ import { EPerson } from 'src/app/shared/Interfaces/eperson';
     console.log("Father", this.persons);
   }
 ```
+<!-- TOC --><a name="html-3"></a>
 #### html
 ```html
     <app-person-table [personInput]="currentPerson"></app-person-table>
     <app-simple-datatable [data]="persons"></app-simple-datatable>
 ```
 
+<!-- TOC --><a name="problimata"></a>
 ## problimata
 ng generate service shared/services/person  
 
 `this.persons.push(data);` κάνει mutate στο arr και οχι δημιουργία καινούργιου και έτσι δεν έχω αλλαγή state που θα προκαλέσει επαναφρεσκάρισμα στην σελλιδα
 για αυτό `ts this.persons = [...this.persons, data]`
 
+<!-- TOC --><a name="ngonchanges"></a>
 ## ngOnChanges
 - σαν την useEffect??? simpledatable.ts
 ```ts
@@ -1450,6 +1654,7 @@ ng generate service shared/services/person
   }
 ```
 
+<!-- TOC --><a name="http-client-backend-reqres"></a>
 # http client - <font color="red"> Επικοινωνία με το backend  </font>!!!!!! req/res
 ```bash
 ng generate component components/http-client-example
@@ -1458,6 +1663,7 @@ ng genarate interface shared/Interfaces/jokes
 ```
  θα ρωταεί ένα api το api.chucknoris.io/jokes/random καθε φορά εμφανίζει ένα ανεκδοτο. και https://icanhazdadjoke.com/
 
+<!-- TOC --><a name="appconfigts"></a>
 #### app.config.ts
 ```ts
 import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
@@ -1475,6 +1681,7 @@ export const appConfig: ApplicationConfig = {
   ]
 };
 ```
+<!-- TOC --><a name="jokesservicets"></a>
 #### jokes.service.ts
 ```ts
 // σε όλη την εφαρμογή αυτό το σερβις θα είναι γνώστό. και οπου αλλου την κάνω import
@@ -1523,6 +1730,7 @@ export class JokesService {
   }
 }
 ```
+<!-- TOC --><a name="interfacejokests"></a>
 #### /Interface/jokes.ts
 - χρησιμοποιώ βοηθητικές ιστοσελιδες πχ from json to typescript
 ```ts
@@ -1544,16 +1752,19 @@ export interface ChuckNorrisJoke {
 ```
 
 - για να εμφανιστεί στην εφαρμογή μου
+<!-- TOC --><a name="approutes"></a>
 #### app.routes
 ```ts
   { path: 'http-client-example', component: HttpClientExampleComponent},
 ```
+<!-- TOC --><a name="list-group-menu-ts-2"></a>
 #### list group  menu ts
 ```ts
     { text: 'HTTP client example', linkName:'http-client-example'}
 ```
 
 ---
+<!-- TOC --><a name="http-client-examplets"></a>
 #### http-client-example.ts
 πρέπει να κάνει τα δύο ρικουεστ απο το σερβισ και να επιστρέψει το αποτέλεσμα (τα ανεκδοτα)
 **ngOnInit()**
@@ -1610,6 +1821,7 @@ export class HttpClientExampleComponent implements OnInit {
 ```
 
 - τώρα που έλαβα τα ντάτα και τα διαμόρφωσα πρέπει να τα κάνω να εμφανιστουν στην σελίδα φτιαχνοντας το αντιστοιχοο τεμπλειτ
+<!-- TOC --><a name="ts-3"></a>
 #### ts
 ```ts
 import { MatCardModule } from '@angular/material/card';
@@ -1619,6 +1831,7 @@ import { MatButtonModule } from '@angular/material/button';
 ```
 
 - `(click)="refreshDadJoke()"`
+<!-- TOC --><a name="http-client-examplehtml"></a>
 #### http-client-example.html
 ```html
 <div class="d-flex flex-column gap-2 mt-2 w-75">
@@ -1648,6 +1861,7 @@ import { MatButtonModule } from '@angular/material/button';
 </div>
 ```
 
+<!-- TOC --><a name="user-registration-form"></a>
 # user registration form
 - θα χρησιμοποιήσουμε το node απο τα προηγούμενα μαθήματα ως backend
 ```bash
@@ -1657,6 +1871,7 @@ ng generate service shared/services/user
 ng generate environments
 ```
 - το enviroments μας επιτρέπει να έχουμε δύο περιβάλλοντα τύπου development και working (Πχ άλλα url ή τεστ κλπ)
+<!-- TOC --><a name="environmentdevelopmentts"></a>
 #### environment.development.ts
 ```ts
 export const environment = {
@@ -1664,6 +1879,7 @@ export const environment = {
   apiURL: 'http://localhost:3000'
 };
 ```
+<!-- TOC --><a name="environmentts"></a>
 #### environment.ts
 ```ts
 export const environment = {
@@ -1673,6 +1889,7 @@ export const environment = {
 ```
 
 - φτιάχνω το ιντερφεισ
+<!-- TOC --><a name="usersts"></a>
 #### users.ts
 ```ts
 export interface User {
@@ -1694,6 +1911,7 @@ export interface User {
 ```bash
 
 ```
+<!-- TOC --><a name="userservicets"></a>
 #### user.service.ts
 ``` ts
 import { Injectable, inject, signal, effect } from '@angular/core';
@@ -1721,10 +1939,12 @@ export class UserService {
 ```
 
 - τώρα πρέπει να τα βάλω μέσα στην υπόλοιπη σελίδα για να τα βλέπω
+<!-- TOC --><a name="approutests-1"></a>
 #### app.routes.ts
 ```ts
   { path: 'user-registration-example', component: UserRegistrationComponent},
 ```
+<!-- TOC --><a name="list-group-menuts"></a>
 #### list-group-menu.ts
 ```ts
   { text: 'user Registration Componenet', linkName:'user-registration-example'}
@@ -1749,6 +1969,7 @@ import { MatButtonModule } from '@angular/material/button';
 //...
 })
 ```
+<!-- TOC --><a name="user-registrationcomponenthtml"></a>
 #### user-registration.component.html
 - αργοτερα θα πάω στο ts να φτιάξω τα `[formGroup]="form"` και `formControlName="username"`
 
@@ -1835,6 +2056,7 @@ import { MatButtonModule } from '@angular/material/button';
 
 - η φόρμα είναι εμφανισιακά εντάξη αλλά δεν έχει λειτορυγικότητα και φτιάχνω τη λογική στο ts (οχι template driven form αλλα reactive form)
 
+<!-- TOC --><a name="user-registration-component-ts"></a>
 #### user registration component ts
 ```ts
 import { 
@@ -1895,6 +2117,7 @@ export class UserRegistrationComponent {
   </button>
 ```
 
+<!-- TOC --><a name="ts-4"></a>
 #### ts
 ```ts
   onSubmit(){
@@ -1928,6 +2151,7 @@ export class UserRegistrationComponent {
 - τωρα διάφοροι ελεγχοι με if
 - είναι ίδια τα δύο πασσγουορντ;
 
+<!-- TOC --><a name="ts-5"></a>
 #### ts
 - `form.get('password')?.value;`
 ```ts
@@ -1952,6 +2176,7 @@ export class UserRegistrationComponent {
     return null
   }
 ```
+<!-- TOC --><a name="html-4"></a>
 #### html
 ```html
       <mat-form-field>
@@ -1967,10 +2192,12 @@ export class UserRegistrationComponent {
 
 - έλεγχος για το ημαιλ αν υπάρχει στην βάση
 - καποια πράγματα πρέπει να προστεθούν στο backend
+<!-- TOC --><a name="userroutes"></a>
 #### user.routes
 ```js
 router.get('/check_duplicate_email/:email', userController.checkDuplicateEmail)
 ```
+<!-- TOC --><a name="usercontroller"></a>
 #### user.controller
 ```js
 exports.checkDuplicateEmail = async(req, res) => {
@@ -1991,6 +2218,7 @@ exports.checkDuplicateEmail = async(req, res) => {
 }
 ```
 - πισω στην angular
+<!-- TOC --><a name="userserviice"></a>
 #### user.serviice
 ```ts
   check_dublicate_email(email: string) {
@@ -2002,6 +2230,7 @@ exports.checkDuplicateEmail = async(req, res) => {
 
 - `this.form.get("email")?.value;`
 - subscribe
+<!-- TOC --><a name="ts-6"></a>
 #### ts
 ```ts
 import { UserService } from 'src/app/shared/services/user.service';
@@ -2029,6 +2258,7 @@ import { UserService } from 'src/app/shared/services/user.service';
     }
   }
 ```
+<!-- TOC --><a name="html-5"></a>
 #### html
 ```html
       <mat-form-field>
@@ -2045,12 +2275,14 @@ import { UserService } from 'src/app/shared/services/user.service';
 
 - θα πρέπει στο onsubmit να τρέξω ένα post στο backend
 - αλλα πρώτα θα φτιαξω το servise
+<!-- TOC --><a name="userservicets-1"></a>
 #### user.service.ts
 ```ts
   registerUser(user:User) {
     return this.http.post<{status: boolean, data: User}>(`${API_URL}`, user)
   }
 ```
+<!-- TOC --><a name="ts-7"></a>
 #### ts
 ```ts
   onSubmit(){
@@ -2080,7 +2312,81 @@ import { UserService } from 'src/app/shared/services/user.service';
       })
   }
 ```
+- Αν τώρα σώσουμε ένα χρήστη θα μας βγάλει unothorized
+- εσβησα προσορινα τα middleware και θα ξαναμπούν αργότερα
+- θελω να μου εμφανίζει μύνημα success
 
+```ts
+  registrationStatus: {success: boolean, message: string} = {
+    success: false,
+    message: 'Not attempted yet'
+  }
+
+    onSubmit(){
+    const data: User = { 
+      //...
+    }
+        console.log(data);
+    this.userService.registerUser(data)
+      .subscribe({
+        next: (response) => {
+          console.log("User Saved", response);
+          // -v
+          this.registrationStatus = {success: true, message: "User registrered"}
+        },
+        error: (response) => {
+          console.log("User not Saved", response.error.data.errorResponse.errmsg)
+          // -v
+          this.registrationStatus = {success: false, message: response.error.data.errorResponse.errmsg}
+        }
+      })    
+  }
+```
+
+<!-- TOC --><a name="html-6"></a>
+#### html
+```html
+<h4>User Registration Example</h4>
+@if (registrationStatus.message==="Not attempted yet"){
+    <div class="d-flex flex-column mt-2 w-50">
+      <form [formGroup]="form" class="d-flex flex-column">
+      <!-- ... -->
+    </form>
+  </div>
+} @else {
+  @if(registrationStatus.success){
+    <div class="alert alert-success mt-2 w-50">
+      <strong>Success:</strong> {{registrationStatus.message}}
+    </div>
+  } @else {
+    <div class="alert alert-danger mt-2 w-50">
+      <strong>Error:</strong> {{registrationStatus.message}}
+    </div>
+  }
+}
+```
+
+<!-- TOC --><a name="ts-8"></a>
+#### ts
+- καθαρίζω την φορμα για να περάσω καινούργιο
+```ts
+  registerAnother(){
+    this.form.reset()
+    this.registrationStatus = {success:false, message: "Not attempted yet"}
+  }
+```
+<!-- TOC --><a name="html-7"></a>
+#### html
+```html
+<button 
+  mat-flat-button
+  color="primary"
+  class="mt-2"
+  (click) = "registerAnother()"
+>
+  Register Another User
+</button>
+```
 
 
 
