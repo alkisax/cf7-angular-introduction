@@ -10,5 +10,6 @@ router.post('/', verifyToken, verifyRoles("ADMIN"), userController.create)
 router.patch('/:username', userController.update)
 router.delete('/:username', userController.deleteByUsername)
 router.delete('/:username/email/:email', userController.deleteByEmail)
+router.get('/check_duplicate_email/:email', userController.checkDuplicateEmail)
 
 module.exports = router

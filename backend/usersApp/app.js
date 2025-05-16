@@ -11,10 +11,10 @@ const user = require('./routes/user.routs')
 const userProduct = require('./routes/user.products.routes')
 const auth = require('./routes/auth.routs')
 
-// app.use(cors ({
-//   // origin: '*'
-//   origin: ['http://localhost:3000']
-// }))
+app.use(cors ({
+  origin: '*'
+//   origin: ['http://localhost:4200']
+}))
 
 app.use('/api/users', user)
 app.use('/api/user-product', userProduct)

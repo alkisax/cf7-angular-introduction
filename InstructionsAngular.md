@@ -1966,9 +1966,48 @@ export class UserRegistrationComponent {
 ```
 
 - έλεγχος για το ημαιλ αν υπάρχει στην βάση
+- καποια πράγματα πρέπει να προστεθούν στο backend
+#### user.routes
+```js
+router.get('/check_duplicate_email/:email', userController.checkDuplicateEmail)
+```
+#### user.controller
+```js
+exports.checkDuplicateEmail = async(req, res) => {
+  const email = req.params.email;
+ 
+  console.log("Check for duplicate email address", email);
+  try {
+    const result = await User.findOne({ email: email });
+    if (result) {
+      res.status(400).json({ status: false, data: result });
+    } else {
+      res.status(200).json({ status: true, data: result });
+    }
+  } catch (err) {
+    res.status(400).json({ status: false, data: err });
+    console.error(`Problem in finding email address: ${email}`, err);
+  }
+}
+```
+- πισω στην angular
+#### user.serviice
+```ts
+  check_dublicate_email(email: string) {
+    return this.http.get<{status: boolean, data:User}>(
+      `${API_URL}/check_duplicate_email/${email}`
+    )
+  }
+```
+
 - `this.form.get("email")?.value;`
+- subscribe
 #### ts
 ```ts
+import { UserService } from 'src/app/shared/services/user.service';
+
+  userService = inject(UserService)
+
   check_dublicate_email(){
     const email = this.form.get("email")?.value;
 
@@ -2002,6 +2041,44 @@ export class UserRegistrationComponent {
         }
         
       </mat-form-field>
+```
+
+- θα πρέπει στο onsubmit να τρέξω ένα post στο backend
+- αλλα πρώτα θα φτιαξω το servise
+#### user.service.ts
+```ts
+  registerUser(user:User) {
+    return this.http.post<{status: boolean, data: User}>(`${API_URL}`, user)
+  }
+```
+#### ts
+```ts
+  onSubmit(){
+    // const data = this.form.value as User;
+    const data: User = {
+      'username': this.form.get('username')?.value || '',
+      'password': this.form.get('password')?.value || '',
+      'name': this.form.get('name')?.value || '',
+      'surname': this.form.get('surname')?.value || '',
+      'email':this.form.get('email')?.value || '',
+      'address': {
+        'area':this.form.controls.address.controls.area?.value || '',
+        'road': this.form.controls.address.controls.road?.value || ''
+      }
+    }
+    console.log(data);
+    this.userService.registerUser(data)
+      .subscribe({
+        next: (response) => {
+          console.log("User Saved", response);
+          this.registrationStatus = {success: true, message: "User registrered"}
+        },
+        error: (response) => {
+          console.log("User not Saved", response.error.data.errorResponse.errmsg)
+          this.registrationStatus = {success: false, message: response.error.data.errorResponse.errmsg}
+        }
+      })
+  }
 ```
 
 
