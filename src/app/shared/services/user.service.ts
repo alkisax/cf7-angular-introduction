@@ -15,6 +15,11 @@ export class UserService {
   http: HttpClient = inject(HttpClient);
   router = inject(Router);
 
+  // η μεταβλιτή signal οταν αλλάξει αλλάζει σε όλα τα componet (κατι σαν redux)
+  // δηλ μου επιστρέφει LoggedInUser|null και αρχική τιμή null
+  // όταν ένας γίνει Login  εκχώρησε αυτά που παίρνω απο το payload
+  // η signal μεταβλητη εμφανίζετε σε διαφορα component. τους βάζω ένα $ για να τις γνωρίζω
+  // της δίνω τιμή με user$.set()
   user$ = signal<LoggedInUser | null>(null);
 
   // constructor(){

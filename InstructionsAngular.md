@@ -1,3 +1,5 @@
+# https://github.com/mkarampatsis/cf7-angular-introduction/tree/main/src
+
 <!-- TOC start (generated with https://github.com/derlin/bitdowntoc) -->
 
 - [TypeScript](#typescript)
@@ -2568,8 +2570,252 @@ export interface LoggedInUser {
   roles: [string]
 }
 ```
+1:11:26 13/5/25
+### προσθήκη χρίστη στο navbar
+```bash
+ng generate component components/navbar
+```
+#### navbar.component.html
+```html
+<!-- routerLink="" δηλ με πάει στην κεντρική σελίδα. πρέπει να προστεθει στα ιμπορτ -->
+<nav class="navbar navbar-dark bg-primary justify-content-between">
+  <a class="navbar-brand ms-3 cursor-pointer" role="button" routerLink=""> 
+    CF - Angular Introduction
+  </a>
+  <!-- αργότερα -->
+  <!-- @if(user()){
+    <span class="me-3 d-flex gap-2 text-light">
+      Welcome, {{user()?.username}}
+      <mat-icon role="button"(click)='logout()'>logout</mat-icon>
+    </span>
+  } @else {
+    <span class="text-light me-3 d-flex gap-2 align-items-center">
+      Login
+      <mat-icon role="button" class="icon-link-hover" routerLink="login">login</mat-icon>
+    </span>
+  } -->
+</nav>
+```
 
+#### app.component.ts
+```ts
+import { NavbarComponent } from './components/navbar/navbar.component';
 
+  imports: [NavbarComponent, PersonTableComponent, EventBindExampleComponent, RouterOutlet, RouterLink, ListGroupMenuComponent],
+
+```
+
+#### app.component.html
+```html
+    <!-- <nav class="navbar navbar-dark bg-primary justify-content-between">
+      <a class="navbar-brand ms-3 cursor-pointer" role="button">CF7 - Angular Introduction</a>
+    </nav> -->
+    <app-navbar></app-navbar>
+
+```
+## - **signal**
+### σβήνω το lockal storage στο logout
+#### shared/services/user.service.ts
+```ts
+import { Injectable, inject, signal, effect } from '@angular/core';
+import { Router } from '@angular/router';
+
+  router = inject(Router);
+
+  // η μεταβλιτή signal οταν αλλάξει αλλάζει σε όλα τα componet (κατι σαν redux)
+  // δηλ μου επιστρέφει LoggedInUser|null και αρχική τιμή null
+  // όταν ένας γίνει Login  εκχώρησε αυτά που παίρνω απο το payload
+  // η signal μεταβλητη εμφανίζετε σε διαφορα component. τους βάζω ένα $ για να τις γνωρίζω
+  // της δίνω τιμή με .set()
+  user$ = signal<LoggedInUser | null>(null);
+```
+παρακάτω έχει
+```ts
+  loginUser(credentials: Credentials){
+    return this.http.post<{status:boolean, data:string}>(
+      `${API_URL_AUTH}/login`,credentials
+    )
+  }
+
+  logoutUser(){
+    this.user$.set(null);
+    localStorage.removeItem('access_token');
+    this.router.navigate(['login']);
+  }
+```
+#### user-login.component.ts
+```ts
+// εχω προσθέσει ένα user στο userService. .set του βάζω τιμή
+          this.userService.user$.set({
+            username: decodedTokenSubject.username,
+            email: decodedTokenSubject.email,
+            roles:decodedTokenSubject.roles
+          });
+          // θέλει ()
+          console.log("Signal>>>",this.userService.user$());
+```
+στο 
+```ts
+  onSubmit(){
+    console.log(this.form.value);
+    const credentials = this.form.value as Credentials
+    
+    this.userService.loginUser(credentials)
+      .subscribe({
+        next: (response) => {
+          console.log("Logged in",response)
+          const access_token = response.data;
+          localStorage.setItem('access_token', access_token);
+          
+          const decodedTokenSubject = jwtDecode(access_token) as unknown as LoggedInUser
+          console.log(decodedTokenSubject);
+
+          this.userService.user$.set({
+            username: decodedTokenSubject.username,
+            email: decodedTokenSubject.email,
+            roles:decodedTokenSubject.roles
+          });
+          console.log("Signal>>>",this.userService.user$());
+          this.router.navigate(['user-registration-example'])
+        },
+        error: (error) => {
+          console.log("Not logged in",error)
+        }
+      })
+  }
+```
+
+#### navbar.component.ts
+```ts
+import { Component, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
+// material icon
+import { MatIconModule } from '@angular/material/icon';
+import { UserService } from 'src/app/shared/services/user.service';
+
+@Component({
+  selector: 'app-navbar',
+  imports: [RouterLink, MatIconModule],
+  templateUrl: './navbar.component.html',
+  styleUrl: './navbar.component.css'
+})
+export class NavbarComponent {
+  userService = inject(UserService);
+  user = this.userService.user$;
+
+  logout(){
+    this.userService.logoutUser();
+  }
+}
+```
+
+#### navbar.component.html
+```html
+  @if(user()){
+    <span class="me-3 d-flex gap-2 text-light">
+      Welcome, {{user()?.username}}
+      <mat-icon role="button"(click)='logout()'>logout</mat-icon>
+    </span>
+  } @else {
+    <span class="text-light me-3 d-flex gap-2 align-items-center">
+      Login
+      <mat-icon role="button" class="icon-link-hover" routerLink="login">login</mat-icon>
+    </span>
+  }
+```
+- πως μπορώ μια signal μεταβλητη όταν αλλάζει να τρέχει αυτόματα κατι
+#### User.service.ts
+```ts
+//effect
+import { Injectable, inject, signal, effect } from '@angular/core';
+
+  // constructor(){
+  //   effect(() =>{
+  //     if (this.user$()){
+  //       console.log('User Logged In', this.user$()?.username);
+  //     } else {
+  //       console.log("No user Logged in");
+  //     }
+  //   });
+  // }
+
+```
+
+### δημιουργία guard
+θελω να μην μπορώ να μπω στο user registretion component
+
+```bash
+ng generate guard shared/guards/auth
+```
+- -> CanActivatte
+#### auth.guards.ts
+```ts
+import { CanActivateFn, Router } from '@angular/router';
+import {inject} from '@angular/core';
+import { UserService } from '../services/user.service';
+
+export const authGuard: CanActivateFn = (route, state) => {
+  // εδω θέλει const γιατί δεν είμαστε μεσα σε κλάση
+  const userService = inject(UserService);
+  const router = inject(Router);
+  
+  if (userService.user$() && !userService.isTokenExpired()) {
+    return true;
+  }
+
+  // αν δεν είναι Login αντί να μπεί μεσα στείλε τον στον Login
+  return router.navigate(['login']);
+};
+```
+όπως βάζαμε middleware στο front θα βάζουμε αυτό
+#### app.routes.ts
+```ts
+// GUARDS
+import { authGuard } from './shared/guards/auth.guard';
+
+  // { path: 'user-registration-example', component: UserRegistrationComponent},
+  { 
+    path: 'user-registration-example', 
+    component: UserRegistrationComponent,
+    canActivate: [authGuard]
+  },
+```
+### έλεγχος admin
+```bash
+ng generate guard shared/guards/admin-role
+```
+#### admin-role.guard.ts
+```ts
+import { CanActivateFn, Router } from '@angular/router';
+import {inject} from '@angular/core';
+import { UserService } from '../services/user.service';
+
+export const adminRoleGuard: CanActivateFn = (route, state) => {
+  const userService = inject(UserService);
+  const router = inject(Router);
+
+  const userRoles = userService.user$()?.roles;
+  const hasPermission = userRoles?.includes("ADMIN");
+  console.log("ADMIN ROLE GUARD", userRoles, hasPermission);
+  
+  if (userService.user$() && hasPermission){
+    return true;
+  }
+  
+  return router.navigate(['restricted-content']);
+};
+```
+
+#### app.routes
+```ts
+import { adminRoleGuard } from './shared/guards/admin-role.guard';
+
+  { 
+    path: 'user-registration-example', 
+    component: UserRegistrationComponent,
+    canActivate: [authGuard, adminRoleGuard]
+  },
+```
 
 
 
