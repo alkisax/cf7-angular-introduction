@@ -14,7 +14,7 @@ import { UserLoginComponent } from './components/user-login/user-login.component
 // GUARDS
 import { authGuard } from './shared/guards/auth.guard';
 import { adminRoleGuard } from './shared/guards/admin-role.guard';
-// import { RestrictedContentComponent } from './components/restricted-content/restricted-content.component';
+import { RestrictedContentComponent } from './components/restricted-content/restricted-content.component';
 
 export const routes: Routes = [
   { path: 'for-directive-example', component:ForDirectiveExampleComponent},
@@ -34,6 +34,7 @@ export const routes: Routes = [
   },
 
   { path: 'login', component: UserLoginComponent},
+  { path:'restricted-content', component: RestrictedContentComponent},
   { path: 'welcome', component: WelcomeComponent },
   { path: '', redirectTo:'/welcome', pathMatch:'full' }
 ];

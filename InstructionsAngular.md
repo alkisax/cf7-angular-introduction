@@ -2390,7 +2390,7 @@ import { UserService } from 'src/app/shared/services/user.service';
 </button>
 ```
 
-## authentication
+# authentication
 - ο χρήστης θα πρέπει να έχει κάνει authentication και να έχει ρολο admin. Ο ελεγχος πρέπει να γίνετε και με τα middleware του backend και με τα guards στο frontend
 
 ### guards
@@ -2817,6 +2817,276 @@ import { adminRoleGuard } from './shared/guards/admin-role.guard';
   },
 ```
 
+## έχει γίνει expire το token?
+#### user.service.ts
+```ts
+import { jwtDecode } from 'jwt-decode';
+
+  isTokenExpired(): boolean {
+    // φερε το τοκεν απο το local storage
+    const token = localStorage.getItem('access_token');
+    // is token expired? -> true
+    if (!token) return true;
+
+    try {
+      const decoded = jwtDecode(token);
+      // το exp είναι το expire Που το έχουμε αποθηκεύσει στο payload του τόκεν. είναι σε χρόνο σε msec
+      const exp = decoded.exp;
+      const now = Math.floor(Date.now()/1000);
+      // όπότε συγκρίνων την τωρινή ώρα με την ώρα λήξης
+      if (exp) {
+        // μπερδέυτικα. αυτό δεν μας γυρνάει false? OXI If exp (expiration time) is less than now (current time), it means: The expiration time is in the past. Therefore, the token has expired
+        return exp < now;
+      } else {
+        return true
+      }
+    } catch (err) {
+      return true
+    } 
+  }
+```
+
+#### auth.guard.ts
+```ts
+  if (userService.user$() && !userService.isTokenExpired()) {
+    return true;
+  }
+```
+
+- δεν θελω αν μπω σε μια σελιδα για την οποια δεν εχω ρολο αν με πηγένει στο λογκ ιν γιατί μπορεί και να έχω κάνω. αλλα να με πηγένει σε μια σελίδα άλλη που να λέει δεν επιτρέπετε η εισοδος εδώ
+
+```bash
+ng generate component components/restricted-content
+```
+#### restricted-content.html
+```html
+<h4>No Permission</h4>
+
+<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab quasi voluptatibus quae aperiam fugiat vero at, sunt cumque quis fuga minus rem exercitationem repellendus repudiandae iure unde pariatur quod praesentium!</p>
+```
+
+#### app.routes.ts
+``` ts
+import { RestrictedContentComponent } from './components/restricted-content/restricted-content.component';
+
+
+  { path:'restricted-content', component: RestrictedContentComponent},
+```
+
+#### admon-role.guard.ts
+```ts
+  return router.navigate(['restricted-content']);
+```
+
+- επειδή κάνω ριφρεσ την σελίδα μου η signal μεταβλητή γίνετε null ενώ την χρειάζομαι. καπου θα πρέπει να πω "με το που θα φορτώνει η εφαρμογή κάνε initialise τη signal"
+- *ιδιο με user-logim.compnents.ts -> onSubmit*
+#### user.service.ts
+```ts
+  constructor(){
+    const access_token = localStorage.getItem("access_token");
+    if (access_token) {
+      const decodedTokenSubject = jwtDecode(access_token) as unknown as LoggedInUser
+      this.user$.set({
+        username: decodedTokenSubject.username,
+        email: decodedTokenSubject.email,
+        roles: decodedTokenSubject.roles
+      })
+    }
+
+    effect(() =>{
+      if (this.user$()){
+        console.log('User Logged In', this.user$()?.username);
+      } else {
+        console.log("No user Logged in");
+      }
+    });
+  }
+```
+
+## google login
+
+#### user-login.components.html
+```html
+<div class="mt-2">
+  <button class="btn btn-primary" (click) = "googleLogin()">
+    Login with Google
+  </button>
+</div>
+```
+
+#### user-login.components.ts
+```ts
+  googleLogin(){
+    this.userService.redirectToGoogleLogin();
+  }
+```
+
+#### user.service.ts
+```ts
+  redirectToGoogleLogin() {
+    // το παίρνω απο το env του backend που το είχα ξαναπαρει απο το google cloud
+    const clientId = '57920510271-53632el4r6trhgmv72f0bn01ljui923e.apps.googleusercontent.com';
+    // επιστρέφω στο backend
+    const redirectUri = 'http://localhost:3000/api/auth/google/callback';
+    // διάφορα του google
+    const scope = 'email profile';
+    const responseType = 'code';
+    const accessType = 'offline'
+    
+    // to εκανα κοπι πειστ απο οταν το είχα φτιαξει στο μπακ απλως έβαλα τις μεταβλητές
+    const url = `https://accounts.google.com/o/oauth2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=${responseType}&scope=${scope}&access_type=${accessType}`;
+
+    window.location.href = url;
+  }
+
+
+/* 
+// https://accounts.google.com/o/oauth2/auth?client_id=57920510271-53632el4r6trhgmv72f0bn01ljui923e.apps.googleusercontent.com&redirect_uri=http://localhost:3000/api/auth/google/callback&response_type=code&scope=email%20profile&access_type=offline
+// το client id απο το γκουγκλ
+// το uri απο το γκουγκλ
+// το responce_type απο το auth.service
+
+// auth.controller.js backend
+exports.googleLogin = async(req, res) => {
+  const code = req.query.code
+  if (!code) {
+    res.status(400).json({status: false, data: "auth code is missing"})
+  } else {
+    let user = await authService.googleAuth(code)
+    if (user) {
+      console.log(">>>", user)
+      res.status(200).json({status:true, data: user})      
+    } else {
+      res.status(400).json({status: false, data: "problem in google login"})
+    }
+  }
+}
+
+// auth.srvice.js
+async function googleAuth(code) {
+  console.log("Google login", code);
+  const CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
+  const CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
+  const REDIRECT_URI = process.env.REDIRECT_URI;
+
+  const oauth2Client = new OAuth2Client(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI); //εχουμε καλέσει την βιβλιοθήκη στην αρχη
+
+  try {
+    // Exchange code for tokens
+    const { tokens } = await oauth2Client.getToken(code)
+    console.log("Step 1", tokens)
+    oauth2Client.setCredentials(tokens) // πιστοποίησε οτι το τοκεν είναι πράγματικά του γκουγκλ
+    const ticket = await oauth2Client.verifyIdToken({ //εδώ ελέγχουμε αν είναι έγκυρο το token που μας δίνει η google
+      idToken: tokens.id_token,
+      audience: CLIENT_ID
+    });
+
+    console.log("Step 2")
+
+    const userInfo = await ticket.getPayload();
+    console.log("Google User", userInfo);
+    return {user: userInfo, tokens}
+  } catch (error) {
+    console.log("Error in google authentication", error);
+    return { error: "Failed to authenticate with google"}
+  }
+}
+*/
+```
+### τώρα μου γυρνάει διαφορα ντατα. δεν θέλω αυτο. θέλω να μου γυρνάει ένα payload με διαφορα data. για να γινει αυτό χρειάζομαι αλλαγές στο backend
+
+#### auth.service.js
+```js
+async function googleAuth(code) {
+  console.log("Google login", code);
+  const CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
+  const CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
+  const REDIRECT_URI = process.env.REDIRECT_URI;
+
+  const oauth2Client = new OAuth2Client(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI); //εχουμε καλέσει την βιβλιοθήκη στην αρχη
+
+  try {
+    // Exchange code for tokens
+    const { tokens } = await oauth2Client.getToken(code)
+    console.log("Step 1", tokens)
+    oauth2Client.setCredentials(tokens) // πιστοποίησε οτι το τοκεν είναι πράγματικά του γκουγκλ
+    const ticket = await oauth2Client.verifyIdToken({ //εδώ ελέγχουμε αν είναι έγκυρο το token που μας δίνει η google
+      idToken: tokens.id_token,
+      audience: CLIENT_ID
+    });
+
+    console.log("Step 2")
+
+    // και αυτό στο τέλος αφού πάρει το code μου επιστρέφει έναν χρήστη με πληροφορίες
+    // αντι να μου κάνει return ένα χρήστη θέλω να μου γυρνάει ένα τοκεν
+    const userInfo = await ticket.getPayload();
+    console.log("Google User", userInfo);
+    // return {user: userInfo, tokens}
+    const user = {
+      username: userInfo.givenName,
+      email: userInfo.email,
+      roles: ["EDITOR", "READER"]
+    }
+    const token = this.generateAccessToken(user)
+    return token
+  } catch (error) {
+    console.log("Error in google authentication", error);
+    return { error: "Failed to authenticate with google"}
+  }
+}
+```
+
+#### auth.controller.js
+```js
+exports.googleLogin = async(req, res) => {
+  // στέλνω στο google ένα code
+  const code = req.query.code
+  if (!code) {
+    res.status(400).json({status: false, data: "auth code is missing"})
+  } else {
+    // Και τρέχω το googleauth με αυτό το code
+    // Πριν είχε ένα userinfo με πληροφορίες απο το google, τώρα θα έχει ένα τοκεν που ευτιαξα εγώ (δες auth.service)
+    let user = await authService.googleAuth(code)
+    if (user) {
+      console.log(">>>", user)
+      // res.status(200).json({status:true, data: user})
+      const frontendRedirectUrl = `http://localhost:4200/login?token=${user}`
+      return res.redirect(frontendRedirectUrl)   
+    } else {
+      res.status(400).json({status: false, data: "problem in google login"})
+    }
+  }
+}
+```
+
+#### user-login.components.ts
+```ts
+import { Component, inject, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+
+  router = inject(Router);
+  route = inject(ActivatedRoute)
+
+  ngOnInit(): void {
+    this.route.queryParams
+      .subscribe(params => {
+        const access_token = params["token"];
+        if (access_token) {
+          localStorage.setItem('access_token', access_token);
+          const decodedTokenSubject = jwtDecode(access_token) as unknown as LoggedInUser
+          console.log("OnInit", decodedTokenSubject);
+          this.userService.user$.set({
+            username: decodedTokenSubject.username,
+            email:decodedTokenSubject.email,
+            roles: decodedTokenSubject.roles
+          });
+          this.router.navigate(['user-registration-example']);
+        }
+      })
+  }
+```
+
+1:18:00 14/5/25
 
 
 

@@ -27,14 +27,19 @@ exports.login = async(req, res) =>{
 }
 
 exports.googleLogin = async(req, res) => {
+  // στέλνω στο google ένα code
   const code = req.query.code
   if (!code) {
     res.status(400).json({status: false, data: "auth code is missing"})
   } else {
+    // Και τρέχω το googleauth με αυτό το code
+    // Πριν είχε ένα userinfo με πληροφορίες απο το google, τώρα θα έχει ένα τοκεν που ευτιαξα εγώ (δες auth.service)
     let user = await authService.googleAuth(code)
     if (user) {
       console.log(">>>", user)
-      res.status(200).json({status:true, data: user})      
+      // res.status(200).json({status:true, data: user})
+      const frontendRedirectUrl = `http://localhost:4200/login?token=${user}`
+      return res.redirect(frontendRedirectUrl)   
     } else {
       res.status(400).json({status: false, data: "problem in google login"})
     }

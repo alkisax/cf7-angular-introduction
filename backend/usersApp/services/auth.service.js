@@ -50,9 +50,18 @@ async function googleAuth(code) {
 
     console.log("Step 2")
 
+    // και αυτό στο τέλος αφού πάρει το code μου επιστρέφει έναν χρήστη με πληροφορίες
+    // αντι να μου κάνει return ένα χρήστη θέλω να μου γυρνάει ένα τοκεν
     const userInfo = await ticket.getPayload();
     console.log("Google User", userInfo);
-    return {user: userInfo, tokens}
+    // return {user: userInfo, tokens}
+    const user = {
+      username: userInfo.givenName,
+      email: userInfo.email,
+      roles: ["EDITOR", "READER"]
+    }
+    const token = this.generateAccessToken(user)
+    return token
   } catch (error) {
     console.log("Error in google authentication", error);
     return { error: "Failed to authenticate with google"}
