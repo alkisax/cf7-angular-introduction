@@ -56,7 +56,7 @@ async function googleAuth(code) {
     console.log("Google User", userInfo);
     // return {user: userInfo, tokens}
     const user = {
-      username: userInfo.givenName,
+      username: userInfo.given_name,
       email: userInfo.email,
       roles: ["EDITOR", "READER"]
     }

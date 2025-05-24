@@ -3023,7 +3023,7 @@ async function googleAuth(code) {
     console.log("Google User", userInfo);
     // return {user: userInfo, tokens}
     const user = {
-      username: userInfo.givenName,
+      username: userInfo.given_name,
       email: userInfo.email,
       roles: ["EDITOR", "READER"]
     }
@@ -3085,11 +3085,64 @@ import { Router, ActivatedRoute } from '@angular/router';
       })
   }
 ```
-
 1:18:00 14/5/25
+## πρέπει να ξαναβάλω τους middleware
+#### user.routes.js
+```js
+// router.post('/', verifyToken, verifyRoles("ADMIN"), userController.create)
+router.post('/', userController.create)
+```
+## interceptor
+- όταν κάνω Login αυτή τη στιγμή έχω τοκεν αλλα οχι στην μορφή που πρέπει
+- η διαδικασία λέγετε interseptor. πριν απο κάθε ρικουεστ μου φτιάχνει τους headers
+
+```bash
+ng generate interceptor shared/services/auth-interceptor
+```
+
+#### services/auth-interceptor.interceptor
+
+```ts
+import { HttpInterceptor, HttpHandler, HttpRequest } from '@angular/common/http';
+// Injectable για να γινει γνωστός σε όλη την εφαρμογή
+import { Injectable } from '@angular/core';
+
+@Injectable()
+export class AuthInterceptorService implements HttpInterceptor {
+  intercept(req: HttpRequest<any>, next: HttpHandler) {
+    const authToken = localStorage.getItem('access_token');
+    if (!authToken){
+      return next.handle(req);
+    }
+
+    const authRequest = req.clone({
+      headers: req.headers.set('Authorization', 'Bearer ' + authToken)
+    });
+    return next.handle(authRequest);
+  }
+}
+```
+
+#### app.config.ts
+```ts
+import { provideHttpClient, withInterceptorsFromDi, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 
-
+export const appConfig: ApplicationConfig = {
+  providers: [
+    provideZoneChangeDetection({ eventCoalescing: true }), 
+    provideRouter(routes),
+    // For HTTP Client Service
+    provideAnimationsAsync(),
+    provideHttpClient(withInterceptorsFromDi()),
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptorService,
+      multi: true
+    }
+  ]
+};
+```
 
 
 
